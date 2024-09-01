@@ -1,9 +1,11 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   index,
+  integer,
   pgTableCreator,
   serial,
   timestamp,
@@ -18,19 +20,51 @@ import {
  */
 export const createTable = pgTableCreator((name) => `learning-cards_${name}`);
 
-export const posts = createTable(
-  "post",
+export const topics = createTable(
+  "topics",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    name: varchar("name", { length: 255 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );
+
+export const questions = createTable(
+  "questions",
+  {
+    id: serial("id").primaryKey(),
+    question: varchar("question", { length: 256 }).notNull(),
+    answer: varchar("answer", { length: 256 }).notNull(),
+    markedAsLearned: boolean("marked_as_learned").default(false).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    topicId: integer("topic_id")
+      .references(() => topics.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+  },
+  (example) => ({
+    nameIndex: index("topic_idx").on(example.topicId),
+    createdAtIndex: index("created_idx").on(example.createdAt),
+    learnedIndex: index("learned_idx").on(example.markedAsLearned),
+  }),
+);
+
+// Define the relations
+export const questionsRelations = relations(questions, ({ one }) => ({
+  topic: one(topics, {
+    fields: [questions.topicId],
+    references: [topics.id],
+  }),
+}));
+
+export const topicsRelations = relations(topics, ({ many }) => ({
+  questions: many(questions),
+}));

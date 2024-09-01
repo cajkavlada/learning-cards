@@ -5,7 +5,7 @@
 - [x] Deploy the app
 - [x] Setup basic UI of card list with mock data
 - [x] Setup and connect to db
-- [ ] Attach database to UI
+- [x] Attach database to UI
 - [ ] Add auth
 - [ ] Set up routing: ListView, TestView, TopicsView
 - [ ] Create, delete, update, list topic

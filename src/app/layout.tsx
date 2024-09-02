@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { Navbar } from "./_components/navbar";
 import "~/styles/globals.css";
+import { Toaster } from "~/components/ui";
 
 export const metadata: Metadata = {
   title: "Learning cards",
@@ -19,9 +20,10 @@ export default function RootLayout({
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
           <Navbar />
-          <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+          <main className="flex flex-col items-center justify-center">
             {children}
           </main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

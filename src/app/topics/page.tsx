@@ -1,7 +1,6 @@
 import { getMyTopics } from "~/server/queries";
 import { CreateTopicButton } from "./_components/CreateTopicDialog";
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,

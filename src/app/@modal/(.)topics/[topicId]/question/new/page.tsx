@@ -1,7 +1,7 @@
-import { QuestionForm } from "~/app/topics/[topicId]/questionForm";
 import { Modal } from "~/components/ui";
+import { QuestionForm } from "~/features/questions/components/questionForm";
 
-export default async function CreateQustionModalPage() {
+export default async function CreateQuestionModalPage() {
   return (
     <Modal title="Create question" className="sm:max-w-[800px]">
       <QuestionForm />

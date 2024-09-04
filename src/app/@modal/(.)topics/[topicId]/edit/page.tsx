@@ -1,5 +1,5 @@
-import { TopicForm } from "~/app/topics/topicForm";
 import { Modal } from "~/components/ui";
+import { TopicForm } from "~/features/topics/components/topicForm";
 import { getMyTopicDetail } from "~/features/topics/queries";
 
 export default async function EditTopicModalPage({

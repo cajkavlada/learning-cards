@@ -1,6 +1,6 @@
 import { getMyTopicDetail } from "~/features/topics/queries";
-import { TopicForm } from "../../topicForm";
 import { FormHeader } from "~/components/form";
+import { TopicForm } from "~/features/topics/components/topicForm";
 
 export default async function EditTopicPage({
   params: { topicId },

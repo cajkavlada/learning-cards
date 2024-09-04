@@ -1,5 +1,5 @@
 import { FormHeader } from "~/components/form";
-import { QuestionForm } from "../../questionForm";
+import { QuestionForm } from "~/features/questions/components/questionForm";
 
 export default async function CreateQuestionPage() {
   return (

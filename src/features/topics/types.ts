@@ -24,10 +24,3 @@ export type UpdateTopic = z.infer<typeof updateTopicSchema>;
 
 export const deleteTopicSchema = baseTopicSchema.pick({ id: true }).required();
 export type DeleteTopic = z.infer<typeof deleteTopicSchema>;
-
-// export const createTopicSchema = z.object({
-//   name: z.string().min(1, "Name is required"),
-//   description: z.string().optional(),
-// });
-
-// export type CreateTopicFormData = z.infer<typeof createTopicSchema>;

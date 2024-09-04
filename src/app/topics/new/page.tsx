@@ -1,5 +1,5 @@
 import { FormHeader } from "~/components/form";
-import { TopicForm } from "../topicForm";
+import { TopicForm } from "~/features/topics/components/topicForm";
 
 export default async function CreateTopicPage() {
   return (

@@ -1,6 +1,6 @@
 import { getQuestionDetail } from "~/features/questions/queries";
-import { QuestionForm } from "../../questionForm";
 import { FormHeader } from "~/components/form";
+import { QuestionForm } from "~/features/questions/components/questionForm";
 
 export default async function QuestionDetailPage({
   params: { questionId },

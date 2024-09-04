@@ -1,10 +1,17 @@
 "use server";
 
 import { createServerAction } from "zsa";
-import { createTopicSchema } from "./types";
+import {
+  createTopicSchema,
+  deleteTopicSchema,
+  updateTopicSchema,
+} from "./types";
 import { revalidatePath } from "next/cache";
-import { createTopicMutation, deleteTopicMutation } from "~/server/queries";
-import { z } from "zod";
+import {
+  createTopicMutation,
+  deleteTopicMutation,
+  updateTopicMutation,
+} from "./queries";
 
 export const createTopic = createServerAction()
   .input(createTopicSchema)
@@ -14,8 +21,16 @@ export const createTopic = createServerAction()
     return newTopic;
   });
 
+export const updateTopic = createServerAction()
+  .input(updateTopicSchema)
+  .handler(async ({ input }) => {
+    const updatedTopic = await updateTopicMutation(input);
+    revalidatePath("/topics/[id]", "page");
+    return updatedTopic;
+  });
+
 export const deleteTopic = createServerAction()
-  .input(z.number())
+  .input(deleteTopicSchema)
   .handler(async ({ input }) => {
     const deletedTopic = await deleteTopicMutation(input);
     revalidatePath("/topics");

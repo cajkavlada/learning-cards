@@ -1,10 +1,14 @@
 import "server-only";
-import { db } from "./db";
-import { questions, topics } from "./db/schema";
+
+import { db } from "~/server/db";
+import { questions, topics } from "~/server/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import type { CreateTopicFormData } from "~/features/topics/types";
-import type { CreateQuestionBE } from "~/features/questions/types";
 import { and, eq, sql } from "drizzle-orm";
+import type {
+  CreateTopic,
+  DeleteTopic,
+  UpdateTopic,
+} from "~/features/topics/types";
 
 export async function getMyTopics() {
   const user = auth();
@@ -41,21 +45,32 @@ export async function getMyTopicDetail(id: number) {
   return topic;
 }
 
-export async function createTopicMutation(formData: CreateTopicFormData) {
+export async function createTopicMutation(input: CreateTopic) {
   const user = auth();
   if (!user.userId) throw new Error("Not authenticated");
 
   const newTopic = await db
     .insert(topics)
     .values({
-      ...formData,
+      ...input,
       userId: user.userId,
     })
     .returning();
   return newTopic;
 }
 
-export async function deleteTopicMutation(id: number) {
+export async function updateTopicMutation({ id, ...input }: UpdateTopic) {
+  const user = auth();
+  if (!user.userId) throw new Error("Not authenticated");
+  const updatedTopic = await db
+    .update(topics)
+    .set(input)
+    .where(and(eq(topics.id, id), eq(topics.userId, user.userId)))
+    .returning();
+  return updatedTopic;
+}
+
+export async function deleteTopicMutation({ id }: DeleteTopic) {
   const user = auth();
   if (!user.userId) throw new Error("Not authenticated");
 
@@ -65,12 +80,4 @@ export async function deleteTopicMutation(id: number) {
     .returning();
 
   return deletedTopic;
-}
-
-export async function createQuestionMutation(data: CreateQuestionBE) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
-  const newQuestion = await db.insert(questions).values(data).returning();
-  return newQuestion;
 }

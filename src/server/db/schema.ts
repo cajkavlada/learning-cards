@@ -10,6 +10,7 @@ import {
   serial,
   timestamp,
   varchar,
+  text,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -40,8 +41,8 @@ export const questions = createTable(
   "questions",
   {
     id: serial("id").primaryKey(),
-    question: varchar("question", { length: 256 }).notNull(),
-    answer: varchar("answer", { length: 256 }).notNull(),
+    question: text("question").notNull(),
+    answer: text("answer").notNull(),
     markedAsLearned: boolean("marked_as_learned").default(false).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)

@@ -5,21 +5,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-  type InputProps,
 } from "../ui";
+import { Editor } from "../ui/wysiwyg/Editor";
 
-export function FormInput<TFieldValues extends FieldValues>({
+export function FormEditor<TFieldValues extends FieldValues>({
   label,
   name,
   control,
-  ...props
 }: {
   label?: string;
   name: Path<TFieldValues>;
   control?: Control<TFieldValues>;
-} & InputProps) {
-  // const { control } = useFormContext<TFieldValues>();
+}) {
   return (
     <FormField
       name={name}
@@ -28,7 +25,7 @@ export function FormInput<TFieldValues extends FieldValues>({
         <FormItem>
           {label ?? <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input {...field} {...props} />
+            <Editor {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

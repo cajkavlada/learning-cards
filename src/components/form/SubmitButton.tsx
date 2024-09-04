@@ -10,9 +10,9 @@ export function SubmitButton({
 }: ButtonProps) {
   return (
     <Button
-      {...props}
       className={cn("flex gap-2", className)}
       disabled={disabled}
+      {...props}
     >
       {disabled && <LoaderCircle className="animate-spin" />}
       {children}

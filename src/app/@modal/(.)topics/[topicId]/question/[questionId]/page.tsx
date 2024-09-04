@@ -1,6 +1,6 @@
+import { QuestionForm } from "~/app/topics/[topicId]/questionForm";
 import { Modal } from "~/components/ui";
 import { getQuestionDetail } from "~/features/questions/queries";
-import { QuestionForm } from "../../../questionForm";
 
 export default async function QuestionDetailModalPage({
   params: { questionId },

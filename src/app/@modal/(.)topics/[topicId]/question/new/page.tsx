@@ -1,5 +1,5 @@
+import { QuestionForm } from "~/app/topics/[topicId]/questionForm";
 import { Modal } from "~/components/ui";
-import { QuestionForm } from "../../../questionForm";
 
 export default async function CreateQustionModalPage() {
   return (

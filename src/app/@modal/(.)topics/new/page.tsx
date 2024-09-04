@@ -1,7 +1,7 @@
+import { TopicForm } from "~/app/topics/topicForm";
 import { Modal } from "~/components/ui";
-import { TopicForm } from "../../topicForm";
 
-export default async function Default() {
+export default async function CreateTopicModalPage() {
   return (
     <Modal title="Create topic">
       <TopicForm />

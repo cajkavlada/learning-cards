@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 
-import { Navbar } from "./_components/navbar";
+import { Navbar } from "../components/layout/navbar";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui";
 
@@ -20,7 +20,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
-          <Navbar />
+          <nav className="flex h-16 w-full items-center p-4">
+            <Navbar />
+          </nav>
           <main className="flex flex-col items-center justify-center">
             {children}
           </main>

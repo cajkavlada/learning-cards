@@ -19,7 +19,6 @@ export function FormInput<TFieldValues extends FieldValues>({
   name: Path<TFieldValues>;
   control?: Control<TFieldValues>;
 } & InputProps) {
-  // const { control } = useFormContext<TFieldValues>();
   return (
     <FormField
       name={name}

@@ -32,7 +32,7 @@ export const Editor = forwardRef<
     <div ref={ref}>
       <EditorProvider
         onUpdate={({ editor }) => onChange(editor.getHTML())}
-        slotBefore={<MenuBar />}
+        slotBefore={<MenuBar value={value} />}
         extensions={extensions}
         immediatelyRender={false}
         content={value}

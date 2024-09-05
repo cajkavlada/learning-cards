@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, type ButtonProps } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { Button, type ButtonProps } from "../ui";
 
 export function ClientLink({
   href,

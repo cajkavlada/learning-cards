@@ -1,9 +1,16 @@
 import { useCurrentEditor } from "@tiptap/react";
 import { Bold, Italic, Strikethrough } from "lucide-react";
 import { EditorButton } from "./EditorButton";
+import { useEffect } from "react";
 
-export function MenuBar() {
+export function MenuBar({ value }: { value: string }) {
   const { editor } = useCurrentEditor();
+
+  useEffect(() => {
+    if (!value && editor) {
+      editor.commands.clearContent(); // Clear the content when the value is empty
+    }
+  }, [value, editor]);
 
   if (!editor) {
     return null;

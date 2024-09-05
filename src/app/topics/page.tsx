@@ -9,19 +9,19 @@ import {
 import Link from "next/link";
 import { DeleteTopicButton } from "./_components/DeleteTopicDialog";
 import { getMyTopics } from "~/features/topics/queries";
-import { ClientLink } from "~/components/ClientLink";
 import { Pencil } from "lucide-react";
+import { ClientLink } from "~/components/common/ClientLink";
+import { PageHeader } from "~/components/layout/pageHeader";
 
 export default async function TopicsPage() {
   const topics = await getMyTopics();
   return (
     <>
-      <div className="flex w-full justify-between gap-4 px-4">
-        <h1 className="flex-grow text-center text-4xl font-bold">Topics</h1>
+      <PageHeader title="Topics">
         <Button asChild>
           <Link href={`/topics/new`}>Create topic</Link>
         </Button>
-      </div>
+      </PageHeader>
       <ul className="flex w-full flex-wrap gap-4 px-4 py-4">
         {topics.map((topic) => (
           <li key={topic.id}>

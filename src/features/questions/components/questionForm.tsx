@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Form, FormInput, FormEditor, SubmitButton } from "~/components/form";
+import { Checkbox, Label } from "~/components/ui";
 import { createQuestion, updateQuestion } from "~/features/questions/actions";
 
 import {
@@ -14,10 +15,13 @@ import {
   type Question,
   type QuestionForm,
 } from "~/features/questions/types";
+import { useEffect, useState } from "react";
 
 export function QuestionForm({ question }: { question?: Question }) {
   const router = useRouter();
   const { topicId } = useParams();
+
+  const [createAnother, setCreateAnother] = useState(false);
 
   const { isPending: createIsPending, execute: create } =
     useServerAction(createQuestion);
@@ -35,14 +39,24 @@ export function QuestionForm({ question }: { question?: Question }) {
   return (
     <Form
       providerProps={form}
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(question ? onUpdate : onCreate)}
       className="w-full"
     >
       <div className="flex flex-col gap-4 py-4">
         <FormInput name="question" control={form.control} label="Question" />
         <FormEditor name="answer" control={form.control} label="Answer" />
       </div>
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-4">
+        {!question && (
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="create-another-checkbox"
+              checked={createAnother}
+              onCheckedChange={(checked) => setCreateAnother(checked === true)}
+            />
+            <Label htmlFor="create-another-checkbox">Create another</Label>
+          </div>
+        )}
         <SubmitButton
           disabled={createIsPending || updateIsPending}
           type="submit"
@@ -53,23 +67,33 @@ export function QuestionForm({ question }: { question?: Question }) {
     </Form>
   );
 
-  async function onSubmit(formData: QuestionForm) {
-    let data, error, toastMessage;
-    if (question) {
-      [data, error] = await update({
-        ...formData,
-        id: question.id,
-      });
-      toastMessage = "Question updated!";
-    } else {
-      [data, error] = await create({
-        ...formData,
-        topicId: Number(topicId),
-      });
-      toastMessage = "Question created!";
-    }
+  async function onCreate(formData: QuestionForm) {
+    const [data, error] = await create({
+      ...formData,
+      topicId: Number(topicId),
+    });
     if (data) {
-      toast(toastMessage);
+      toast("Question created!");
+      if (createAnother) {
+        form.setFocus("question");
+        form.reset();
+      } else {
+        router.back();
+      }
+    }
+    if (error) {
+      toast(error.name, { description: error.message });
+    }
+  }
+
+  async function onUpdate(formData: QuestionForm) {
+    if (!question) return;
+    const [data, error] = await update({
+      ...formData,
+      id: question.id,
+    });
+    if (data) {
+      toast("Question updated!");
       router.back();
     }
     if (error) {

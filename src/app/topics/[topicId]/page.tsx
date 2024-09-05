@@ -8,6 +8,7 @@ import {
 import { getMyTopicDetail } from "~/features/topics/queries";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
+import { PageHeader } from "~/components/layout/pageHeader";
 
 export default async function TopicPage({
   params: { topicId },
@@ -20,10 +21,7 @@ export default async function TopicPage({
 
   return (
     <>
-      <div className="flex w-full justify-between gap-4 px-4">
-        <h1 className="flex-grow text-center text-4xl font-bold">
-          {topic.name}
-        </h1>
+      <PageHeader title={topic.name} description={topic.description}>
         <Button asChild variant="outline" className="w-9 p-0">
           <Link href={`/topics/${topicId}/edit`}>
             <Pencil size={16} />
@@ -32,8 +30,7 @@ export default async function TopicPage({
         <Button asChild>
           <Link href={`/topics/${topicId}/question/new`}>Create question</Link>
         </Button>
-      </div>
-      <p>{topic.description}</p>
+      </PageHeader>
       <ul className="flex w-full flex-col gap-4 px-4 py-4">
         {topic.questions.map((question) => (
           <li key={question.id}>

@@ -7,3 +7,4 @@ export * from "./form";
 export * from "./card";
 export * from "./modal";
 export * from "./confirmDialog";
+export * from "./checkbox";

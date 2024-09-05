@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { Button, Dialog, ConfirmDialog } from "~/components/ui";
-import { deleteTopic } from "~/features/topics/actions";
 import { Trash2 } from "lucide-react";
+import { deleteQuestion } from "../actions";
 
-export function DeleteTopicButton({ id }: { id: number }) {
+export function DeleteQuestionButton({ id }: { id: number }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { isPending, execute } = useServerAction(deleteTopic);
+  const { isPending, execute } = useServerAction(deleteQuestion);
 
   return (
     <>
@@ -27,8 +27,8 @@ export function DeleteTopicButton({ id }: { id: number }) {
         </Button>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <ConfirmDialog
-            title="Delete topic"
-            description="This will delete the topic and all its questions."
+            title="Delete question"
+            description="This will delete selected question."
             onSubmit={() => onSubmit(id)}
             submitDisabled={isPending}
           />
@@ -45,7 +45,7 @@ export function DeleteTopicButton({ id }: { id: number }) {
       setDialogOpen(false);
     }
     if (error) {
-      toast("Failed to delete topic", { description: error.code });
+      toast(error.name, { description: error.message });
     }
   }
 }

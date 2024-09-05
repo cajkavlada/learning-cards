@@ -12,6 +12,7 @@ import {
   deleteTopicMutation,
   updateTopicMutation,
 } from "./queries";
+import { z } from "zod";
 
 export const createTopic = createServerAction()
   .input(createTopicSchema)
@@ -25,7 +26,7 @@ export const updateTopic = createServerAction()
   .input(updateTopicSchema)
   .handler(async ({ input }) => {
     const updatedTopic = await updateTopicMutation(input);
-    revalidatePath("/topics/[id]", "page");
+    revalidatePath("/topics/[topicId]", "page");
     return updatedTopic;
   });
 
@@ -36,3 +37,7 @@ export const deleteTopic = createServerAction()
     revalidatePath("/topics");
     return deletedTopic;
   });
+
+export const shuffleQuizQuestions = createServerAction().handler(async () => {
+  revalidatePath("/topics/[topicId]/quiz");
+});

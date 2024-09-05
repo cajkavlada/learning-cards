@@ -7,11 +7,11 @@ import {
   CardTitle,
 } from "~/components/ui";
 import Link from "next/link";
-import { DeleteTopicButton } from "./_components/DeleteTopicDialog";
 import { getMyTopics } from "~/features/topics/queries";
 import { Pencil } from "lucide-react";
 import { ClientLink } from "~/components/common/ClientLink";
 import { PageHeader } from "~/components/layout/pageHeader";
+import { DeleteTopicButton } from "~/features/topics/components/deleteTopicDialog";
 
 export default async function TopicsPage() {
   const topics = await getMyTopics();
@@ -28,19 +28,21 @@ export default async function TopicsPage() {
             <Link href={`/topics/${topic.id}`}>
               <Card className="w-[350px]">
                 <CardHeader>
-                  <CardTitle className="flex justify-between">
-                    <div className="flex-1 truncate">{topic.name}</div>
+                  <div className="flex justify-between">
+                    <CardTitle className="flex-1">{topic.name}</CardTitle>
                     <ClientLink href={`topics/${topic.id}/edit`}>
                       <Pencil size={16} />
                     </ClientLink>
                     <DeleteTopicButton id={topic.id} />
-                  </CardTitle>
-                  <CardDescription>
-                    {topic.questionsCount} questions
+                  </div>
+                  <CardDescription className="truncate text-wrap">
+                    {topic.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="truncate">{topic.description}</div>
+                  <div className="truncate text-wrap">
+                    {topic.questionsCount} questions
+                  </div>
                 </CardContent>
               </Card>
             </Link>

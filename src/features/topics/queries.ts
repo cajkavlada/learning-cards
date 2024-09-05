@@ -14,10 +14,6 @@ export async function getMyTopics() {
   const user = auth();
   if (!user.userId) throw new Error("Not authenticated");
 
-  // const topics1 = await db.query.topics.findMany({
-  //   where: (model, { eq }) => eq(model.userId, user.userId),
-  // });
-
   const topicList = await db
     .select({
       id: topics.id,
@@ -80,4 +76,19 @@ export async function deleteTopicMutation({ id }: DeleteTopic) {
     .returning();
 
   return deletedTopic;
+}
+
+export async function getTopicWithShuffledQuestions(id: number) {
+  const user = auth();
+  if (!user.userId) throw new Error("Not authenticated");
+
+  const topic = await db.query.topics.findFirst({
+    where: (model, { eq }) => eq(model.userId, user.userId) && eq(model.id, id),
+    with: {
+      questions: {
+        orderBy: sql`RANDOM()`, // Random order
+      },
+    },
+  });
+  return topic;
 }

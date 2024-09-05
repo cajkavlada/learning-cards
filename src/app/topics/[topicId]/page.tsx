@@ -9,6 +9,7 @@ import { getMyTopicDetail } from "~/features/topics/queries";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";
+import { DeleteQuestionButton } from "~/features/questions/components/deleteQuestionDialog";
 
 export default async function TopicPage({
   params: { topicId },
@@ -30,21 +31,29 @@ export default async function TopicPage({
         <Button asChild>
           <Link href={`/topics/${topicId}/question/new`}>Create question</Link>
         </Button>
+        <Button asChild>
+          <Link href={`/topics/${topicId}/quiz`}>Start quiz</Link>
+        </Button>
       </PageHeader>
-      <ul className="flex w-full flex-col gap-4 px-4 py-4">
+      <ul className="flex w-full flex-wrap gap-4 px-4 py-4">
         {topic.questions.map((question) => (
           <li key={question.id}>
             <Link href={`/topics/${topicId}/question/${question.id}`}>
               <Card className="w-[350px]">
                 <CardHeader>
-                  <CardTitle>{question.question}</CardTitle>
+                  <div className="flex justify-between">
+                    <CardTitle className="flex-1">
+                      {question.question}
+                    </CardTitle>
+                    <DeleteQuestionButton id={question.id} />
+                  </div>
                 </CardHeader>
-                <CardContent>
+                {/* <CardContent>
                   <div
                     className="truncate"
                     dangerouslySetInnerHTML={{ __html: question.answer }}
                   />
-                </CardContent>
+                </CardContent> */}
               </Card>
             </Link>
           </li>

@@ -6,6 +6,7 @@ import { questions } from "~/server/db/schema";
 import type {
   CreateQuestion,
   UpdateQuestion,
+  DeleteQuestion,
 } from "~/features/questions/types";
 import { and, eq } from "drizzle-orm";
 
@@ -40,7 +41,7 @@ export async function createQuestionMutation(input: CreateQuestion) {
 
   if (!topic) {
     throw new Error(
-      "Topic not found or you do not have permission for selected this topic",
+      "Topic not found or you do not have permission for selected topic",
     );
   }
 
@@ -71,4 +72,29 @@ export async function updateQuestionMutation({ id, ...input }: UpdateQuestion) {
     .where(eq(questions.id, id))
     .returning();
   return updatedQuestion;
+}
+
+export async function deleteQuestionMutation({ id }: DeleteQuestion) {
+  const user = auth();
+  if (!user.userId) throw new Error("Not authenticated");
+
+  const question = await db.query.questions.findFirst({
+    where: (model, { eq }) => eq(model.id, id),
+    with: { topic: true },
+  });
+
+  if (!question) {
+    throw new Error("Question not found");
+  }
+
+  if (question.topic.userId !== user.userId) {
+    throw new Error("You do not have permission for this question");
+  }
+
+  const deletedQuestion = await db
+    .delete(questions)
+    .where(eq(questions.id, id))
+    .returning();
+
+  return deletedQuestion;
 }

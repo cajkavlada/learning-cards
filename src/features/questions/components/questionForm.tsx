@@ -15,7 +15,7 @@ import {
   type Question,
   type QuestionForm,
 } from "~/features/questions/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function QuestionForm({ question }: { question?: Question }) {
   const router = useRouter();
@@ -97,7 +97,6 @@ export function QuestionForm({ question }: { question?: Question }) {
       router.back();
     }
     if (error) {
-      console.log(error);
       toast(error.name, { description: error.message });
     }
   }

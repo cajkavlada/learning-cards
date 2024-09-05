@@ -19,13 +19,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <body>
+        <body className="flex h-screen flex-col">
           <nav className="flex h-16 w-full items-center p-4">
             <Navbar />
           </nav>
-          <main className="flex flex-col items-center justify-center">
-            {children}
-          </main>
+          <main className="flex flex-1 flex-col items-center">{children}</main>
           {modal}
           <Toaster />
         </body>

@@ -30,7 +30,7 @@ export function DeleteTopicButton({ id }: { id: number }) {
             title="Delete topic"
             description="This will delete the topic and all its questions."
             onSubmit={() => onSubmit(id)}
-            submitDisabled={isPending}
+            submitLoading={isPending}
           />
         </Dialog>
       </div>

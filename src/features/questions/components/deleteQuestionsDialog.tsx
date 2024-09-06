@@ -7,7 +7,7 @@ import { Button, Dialog, ConfirmDialog } from "~/components/ui";
 import { Trash2 } from "lucide-react";
 import { deleteQuestion } from "../actions";
 
-export function DeleteQuestionButton({ id }: { id: number }) {
+export function DeleteQuestionsButton({ ids }: { ids: number[] }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { isPending, execute } = useServerAction(deleteQuestion);
@@ -20,7 +20,7 @@ export function DeleteQuestionButton({ id }: { id: number }) {
             e.preventDefault();
             setDialogOpen(true);
           }}
-          className="relative h-8 w-8 -translate-y-4 translate-x-4 rounded-full p-0"
+          className="h-8 w-8 rounded-full p-0"
           variant="ghost"
         >
           <Trash2 size={16} />
@@ -29,16 +29,16 @@ export function DeleteQuestionButton({ id }: { id: number }) {
           <ConfirmDialog
             title="Delete question"
             description="This will delete selected question."
-            onSubmit={() => onSubmit(id)}
-            submitDisabled={isPending}
+            onSubmit={onSubmit}
+            submitLoading={isPending}
           />
         </Dialog>
       </div>
     </>
   );
 
-  async function onSubmit(id: number) {
-    const [data, error] = await execute({ id });
+  async function onSubmit() {
+    const [data, error] = await execute(ids);
 
     if (data) {
       toast("Topic deleted!");

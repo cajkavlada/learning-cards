@@ -1,14 +1,14 @@
 "use client";
 
-import { revalidatePath } from "next/cache";
 import { Button } from "../../../components/ui";
 import type { Question } from "~/features/questions/types";
 import { useServerAction } from "zsa-react";
+import DOMPurify from "dompurify";
 import { shuffleQuizQuestions } from "../actions";
-import { SubmitButton } from "~/components/form";
-import { useEffect, useState } from "react";
+import { LoadingButton } from "~/components/form";
+import { useState } from "react";
 import { PageHeader } from "~/components/layout/pageHeader";
-import { set } from "zod";
+import { SanitizedHTML } from "~/components/common/SanitizedHTML";
 
 export function Quiz({
   title,
@@ -23,36 +23,40 @@ export function Quiz({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
 
-  const question = questions[currentQuestionIndex];
-  console.log(question?.answer);
+  const currentQuestion = questions[currentQuestionIndex];
+  if (!currentQuestion) return null;
+
   return (
     <>
       <PageHeader title={title}>
-        <SubmitButton disabled={shuffling} onClick={restartQuiz}>
+        <LoadingButton loading={shuffling} onClick={restartQuiz}>
           Restart
-        </SubmitButton>
+        </LoadingButton>
       </PageHeader>
-      {question ? (
-        <div className="flex w-full flex-1 flex-col p-4">
+      <div className="px-4">
+        <h2 className="mb-4 text-xl font-bold">
+          Question {currentQuestionIndex + 1}/{questions.length}
+        </h2>
+        <div className="flex w-full flex-1 flex-col py-4">
           <div className="flex flex-1 flex-col gap-4 text-center">
-            <p>{question.question}</p>
+            <p className="mb-2 text-gray-800">{currentQuestion.question}</p>
             {showAnswer && (
-              <div
+              <SanitizedHTML
                 className="truncate"
-                dangerouslySetInnerHTML={{ __html: question.answer }}
+                html={currentQuestion.answer}
               />
             )}
           </div>
           <div className="flex justify-end gap-2">
-            <Button onClick={() => setShowAnswer((prev) => !prev)}>
-              {showAnswer ? "Hide Answer" : "Reveal Answer"}
-            </Button>
-            <Button onClick={handleNextQuestion}>Next</Button>
+            {!showAnswer && (
+              <Button onClick={() => setShowAnswer(true)}>Reveal Answer</Button>
+            )}
+            {showAnswer && currentQuestionIndex < questions.length - 1 && (
+              <Button onClick={handleNextQuestion}>Next Question</Button>
+            )}
           </div>
         </div>
-      ) : (
-        "No more questions"
-      )}
+      </div>
     </>
   );
 

@@ -5,19 +5,19 @@ import {
   DialogDescription,
   DialogFooter,
 } from "./dialog";
-import { SubmitButton } from "../form";
+import { LoadingButton } from "../form";
 
 export function ConfirmDialog({
   title,
   description,
   onSubmit,
-  submitDisabled,
+  submitLoading,
   submitLabel = "Confirm",
 }: {
   title?: string;
   description?: string;
   onSubmit: () => void;
-  submitDisabled?: boolean;
+  submitLoading?: boolean;
   submitLabel?: string;
 }) {
   return (
@@ -27,9 +27,9 @@ export function ConfirmDialog({
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <DialogFooter>
-        <SubmitButton disabled={submitDisabled} onClick={onSubmit}>
+        <LoadingButton loading={submitLoading} onClick={onSubmit}>
           {submitLabel}
-        </SubmitButton>
+        </LoadingButton>
       </DialogFooter>
     </DialogContent>
   );

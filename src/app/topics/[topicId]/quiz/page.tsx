@@ -1,4 +1,3 @@
-import { PageHeader } from "~/components/layout/pageHeader";
 import { Quiz } from "~/features/topics/components/quiz";
 import { getTopicWithShuffledQuestions } from "~/features/topics/queries";
 
@@ -11,5 +10,11 @@ export default async function QuizPage({
 
   if (!topic) return null;
 
-  return <Quiz title={topic.name} questions={topic.questions} />;
+  return (
+    <div className="container mx-auto py-8">
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <Quiz title={topic.name} questions={topic.questions} />
+      </div>
+    </div>
+  );
 }

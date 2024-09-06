@@ -1,7 +1,7 @@
 import { createInsertSchema } from "drizzle-zod";
 import { questions } from "~/server/db/schema";
 import type { InferSelectModel } from "drizzle-orm";
-import type { z } from "zod";
+import { z } from "zod";
 
 export type Question = InferSelectModel<typeof questions>;
 
@@ -23,7 +23,5 @@ export const updateQuestionSchema = baseQuestionSchema
   .required({ id: true });
 export type UpdateQuestion = z.infer<typeof updateQuestionSchema>;
 
-export const deleteQuestionSchema = baseQuestionSchema
-  .pick({ id: true })
-  .required();
-export type DeleteQuestion = z.infer<typeof deleteQuestionSchema>;
+export const deleteQuestionsSchema = z.array(z.number());
+export type DeleteQuestions = z.infer<typeof deleteQuestionsSchema>;

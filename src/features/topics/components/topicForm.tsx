@@ -11,7 +11,7 @@ import {
   type TopicForm,
 } from "~/features/topics/types";
 
-import { Form, FormInput, SubmitButton } from "~/components/form";
+import { Form, FormInput, LoadingButton } from "~/components/form";
 import { createTopic, updateTopic } from "~/features/topics/actions";
 
 export function TopicForm({ topic }: { topic?: Topic }) {
@@ -44,12 +44,12 @@ export function TopicForm({ topic }: { topic?: Topic }) {
         />
       </div>
       <div className="flex justify-end">
-        <SubmitButton
-          disabled={createIsPending || updateIsPending}
+        <LoadingButton
+          loading={createIsPending || updateIsPending}
           type="submit"
         >
           {topic ? "Update" : "Create"}
-        </SubmitButton>
+        </LoadingButton>
       </div>
     </Form>
   );

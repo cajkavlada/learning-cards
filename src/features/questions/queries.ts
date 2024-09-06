@@ -6,9 +6,9 @@ import { questions } from "~/server/db/schema";
 import type {
   CreateQuestion,
   UpdateQuestion,
-  DeleteQuestion,
+  DeleteQuestions,
 } from "~/features/questions/types";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 export async function getQuestionDetail(id: number) {
   const user = auth();
@@ -74,26 +74,30 @@ export async function updateQuestionMutation({ id, ...input }: UpdateQuestion) {
   return updatedQuestion;
 }
 
-export async function deleteQuestionMutation({ id }: DeleteQuestion) {
+export async function deleteQuestionMutation(ids: DeleteQuestions) {
   const user = auth();
   if (!user.userId) throw new Error("Not authenticated");
 
-  const question = await db.query.questions.findFirst({
-    where: (model, { eq }) => eq(model.id, id),
+  const questionsToDelete = await db.query.questions.findMany({
+    where: (model, { inArray }) => inArray(model.id, ids),
     with: { topic: true },
   });
 
-  if (!question) {
-    throw new Error("Question not found");
+  if (questionsToDelete.length === 0) {
+    throw new Error("No questions found");
   }
 
-  if (question.topic.userId !== user.userId) {
-    throw new Error("You do not have permission for this question");
-  }
+  questionsToDelete.forEach((question) => {
+    if (question.topic.userId !== user.userId) {
+      throw new Error(
+        "You do not have permission to delete some of the selected questions",
+      );
+    }
+  });
 
   const deletedQuestion = await db
     .delete(questions)
-    .where(eq(questions.id, id))
+    .where(inArray(questions.id, ids))
     .returning();
 
   return deletedQuestion;

@@ -4,13 +4,13 @@ import { createServerAction } from "zsa";
 import { revalidatePath } from "next/cache";
 import {
   createQuestionMutation,
-  deleteQuestionMutation,
   updateQuestionMutation,
+  deleteQuestionMutation,
 } from "./queries";
 import {
   createQuestionSchema,
-  deleteQuestionSchema,
   updateQuestionSchema,
+  deleteQuestionsSchema,
 } from "./types";
 
 export const createQuestion = createServerAction()
@@ -30,9 +30,9 @@ export const updateQuestion = createServerAction()
   });
 
 export const deleteQuestion = createServerAction()
-  .input(deleteQuestionSchema)
+  .input(deleteQuestionsSchema)
   .handler(async ({ input }) => {
-    const deletedQuestion = await deleteQuestionMutation(input);
+    const deletedQuestions = await deleteQuestionMutation(input);
     revalidatePath("/topics/[topicId]", "page");
-    return deletedQuestion;
+    return deletedQuestions;
   });

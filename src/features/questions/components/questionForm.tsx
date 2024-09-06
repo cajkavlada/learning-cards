@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { Form, FormInput, FormEditor, SubmitButton } from "~/components/form";
+import { Form, FormInput, FormEditor, LoadingButton } from "~/components/form";
 import { Checkbox, Label } from "~/components/ui";
 import { createQuestion, updateQuestion } from "~/features/questions/actions";
 
@@ -57,12 +57,12 @@ export function QuestionForm({ question }: { question?: Question }) {
             <Label htmlFor="create-another-checkbox">Create another</Label>
           </div>
         )}
-        <SubmitButton
-          disabled={createIsPending || updateIsPending}
+        <LoadingButton
+          loading={createIsPending || updateIsPending}
           type="submit"
         >
           {question ? "Update" : "Create"}
-        </SubmitButton>
+        </LoadingButton>
       </div>
     </Form>
   );

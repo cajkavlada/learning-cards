@@ -9,7 +9,7 @@ import { getMyTopicDetail } from "~/features/topics/queries";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";
-import { DeleteQuestionButton } from "~/features/questions/components/deleteQuestionDialog";
+import { QuestionList } from "~/features/questions/components/questionList";
 
 export default async function TopicPage({
   params: { topicId },
@@ -21,44 +21,32 @@ export default async function TopicPage({
   if (!topic) return null;
 
   return (
-    <>
-      <PageHeader title={topic.name} description={topic.description}>
-        <Button asChild variant="outline" className="w-9 p-0">
-          <Link href={`/topics/${topicId}/edit`}>
-            <Pencil size={16} />
-          </Link>
-        </Button>
-        <Button asChild>
-          <Link href={`/topics/${topicId}/question/new`}>Create question</Link>
-        </Button>
-        <Button asChild>
-          <Link href={`/topics/${topicId}/quiz`}>Start quiz</Link>
-        </Button>
-      </PageHeader>
-      <ul className="flex w-full flex-wrap gap-4 px-4 py-4">
-        {topic.questions.map((question) => (
-          <li key={question.id}>
-            <Link href={`/topics/${topicId}/question/${question.id}`}>
-              <Card className="w-[350px]">
-                <CardHeader>
-                  <div className="flex justify-between">
-                    <CardTitle className="flex-1">
-                      {question.question}
-                    </CardTitle>
-                    <DeleteQuestionButton id={question.id} />
-                  </div>
-                </CardHeader>
-                {/* <CardContent>
-                  <div
-                    className="truncate"
-                    dangerouslySetInnerHTML={{ __html: question.answer }}
-                  />
-                </CardContent> */}
-              </Card>
+    <div className="container mx-auto py-8">
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <PageHeader title={topic.name} description={topic.description}>
+          <Button asChild variant="outline" className="min-w-9 p-0">
+            <Link href={`/topics/${topicId}/edit`}>
+              <Pencil size={16} />
             </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+          </Button>
+          <Button asChild>
+            <Link href={`/topics/${topicId}/question/new`}>
+              Create question
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href={`/topics/${topicId}/quiz`}>Start quiz</Link>
+          </Button>
+        </PageHeader>
+        <Card className="mx-4">
+          <CardHeader>
+            <CardTitle>Questions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <QuestionList questions={topic.questions} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

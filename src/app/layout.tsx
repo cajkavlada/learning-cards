@@ -23,7 +23,9 @@ export default function RootLayout({
           <nav className="flex h-16 w-full items-center p-4">
             <Navbar />
           </nav>
-          <main className="flex flex-1 flex-col items-center">{children}</main>
+          <main className="flex flex-1 flex-col items-center overflow-auto bg-gray-100">
+            {children}
+          </main>
           {modal}
           <Toaster />
         </body>

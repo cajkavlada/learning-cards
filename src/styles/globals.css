@@ -64,3 +64,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+p:empty {
+  display: block;
+  min-height: 1em; /* Or any value that makes sense for a "line" */
+}

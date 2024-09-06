@@ -2,19 +2,19 @@ import { Button, type ButtonProps } from "../ui";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "~/lib/utils";
 
-export function SubmitButton({
+export function LoadingButton({
   children,
   className,
-  disabled,
+  loading,
   ...props
-}: ButtonProps) {
+}: { loading?: boolean } & ButtonProps) {
   return (
     <Button
       className={cn("flex gap-2", className)}
-      disabled={disabled}
+      disabled={loading}
       {...props}
     >
-      {disabled && <LoaderCircle className="animate-spin" />}
+      {loading && <LoaderCircle className="animate-spin" />}
       {children}
     </Button>
   );

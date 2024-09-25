@@ -1,10 +1,10 @@
-import DOMPurify from "dompurify";
+import sanitizeHtml from "sanitize-html";
 
 export function SanitizedHTML({
   html,
   ...props
 }: { html: string } & React.HTMLProps<HTMLDivElement>) {
-  const sanitizedHTML = DOMPurify.sanitize(html);
+  const sanitizedHTML = sanitizeHtml(html);
 
   return <div {...props} dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />;
 }

@@ -7,21 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import {
   topicFormSchema,
-  type Topic,
-  type TopicForm,
+  type TopicProps,
+  type TopicFormProps,
 } from "~/features/topics/types";
 
 import { Form, FormInput, LoadingButton } from "~/components/form";
 import { createTopic, updateTopic } from "~/features/topics/actions";
 
-export function TopicForm({ topic }: { topic?: Topic }) {
+export function TopicForm({ topic }: { topic?: TopicProps }) {
   const router = useRouter();
   const { isPending: createIsPending, execute: create } =
     useServerAction(createTopic);
   const { isPending: updateIsPending, execute: update } =
     useServerAction(updateTopic);
 
-  const form = useForm<TopicForm>({
+  const form = useForm<TopicFormProps>({
     resolver: zodResolver(topicFormSchema),
     defaultValues: {
       name: topic?.name ?? "",
@@ -54,7 +54,7 @@ export function TopicForm({ topic }: { topic?: Topic }) {
     </Form>
   );
 
-  async function onSubmit(formData: TopicForm) {
+  async function onSubmit(formData: TopicFormProps) {
     let data, error, toastMessage;
     if (topic) {
       [data, error] = await update({ ...formData, id: topic.id });

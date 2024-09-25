@@ -5,16 +5,22 @@ import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { Button, Dialog, ConfirmDialog } from "~/components/ui";
 import { Trash2 } from "lucide-react";
-import { deleteQuestion } from "../actions";
+import { deleteQuestions } from "../actions";
+import type { QuestionProps } from "../types";
 
-export function DeleteQuestionsButton({ ids }: { ids: number[] }) {
+export function DeleteQuestionsButton({
+  ids,
+  ...props
+}: {
+  ids: Set<QuestionProps["id"]>;
+} & React.HTMLProps<HTMLDivElement>) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { isPending, execute } = useServerAction(deleteQuestion);
+  const { isPending, execute } = useServerAction(deleteQuestions);
 
   return (
     <>
-      <div onClick={(e) => e.stopPropagation()}>
+      <div {...props} onClick={(e) => e.stopPropagation()}>
         <Button
           onClick={(e) => {
             e.preventDefault();
@@ -38,10 +44,10 @@ export function DeleteQuestionsButton({ ids }: { ids: number[] }) {
   );
 
   async function onSubmit() {
-    const [data, error] = await execute(ids);
+    const [data, error] = await execute(Array.from(ids));
 
     if (data) {
-      toast("Topic deleted!");
+      toast("Question deleted!");
       setDialogOpen(false);
     }
     if (error) {

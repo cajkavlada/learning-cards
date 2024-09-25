@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui";
-import { getMyTopicDetail } from "~/features/topics/queries";
+import { getTopicDetail } from "~/features/topics/actions";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";
@@ -16,7 +16,7 @@ export default async function TopicPage({
 }: {
   params: { topicId: string };
 }) {
-  const topic = await getMyTopicDetail(Number(topicId));
+  const topic = await getTopicDetail(topicId);
 
   if (!topic) return null;
 
@@ -35,17 +35,10 @@ export default async function TopicPage({
             </Link>
           </Button>
           <Button asChild>
-            <Link href={`/topics/${topicId}/quiz`}>Start quiz</Link>
+            <Link href={`/quiz/${topicId}`}>Start quiz</Link>
           </Button>
         </PageHeader>
-        <Card className="mx-4">
-          <CardHeader>
-            <CardTitle>Questions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <QuestionList questions={topic.questions} />
-          </CardContent>
-        </Card>
+        <QuestionList questions={topic.questions} />
       </div>
     </div>
   );

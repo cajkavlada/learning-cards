@@ -1,13 +1,13 @@
 import { Modal } from "~/components/ui";
+import { getTopicDetail } from "~/features/topics/actions";
 import { TopicForm } from "~/features/topics/components/topicForm";
-import { getMyTopicDetail } from "~/features/topics/queries";
 
 export default async function EditTopicModalPage({
   params: { topicId },
 }: {
   params: { topicId: string };
 }) {
-  const topic = await getMyTopicDetail(Number(topicId));
+  const topic = await getTopicDetail(topicId);
   if (!topic) return null;
   return (
     <Modal title="Edit topic" className="sm:max-w-[800px]">

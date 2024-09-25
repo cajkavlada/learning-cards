@@ -2,38 +2,36 @@ import "server-only";
 
 import { db } from "~/server/db";
 import { questions, topics } from "~/server/db/schema";
-import { auth } from "@clerk/nextjs/server";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import type {
-  CreateTopic,
-  DeleteTopic,
-  UpdateTopic,
+  TopicProps,
+  CreateTopicProps,
+  UpdateTopicProps,
+  DeleteTopicsProps,
 } from "~/features/topics/types";
+import type { QuizSessionProps } from "../quiz/types";
 
-export async function getMyTopics() {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function getTopicsByUserQuery(userId: TopicProps["userId"]) {
   const topicList = await db
     .select({
       id: topics.id,
       name: topics.name,
       description: topics.description,
-      questionsCount: sql<number>`COUNT(${questions.id})`, // Counting related questions
+      questionsCount: sql<number>`COUNT(${questions.id})`,
     })
     .from(topics)
-    .leftJoin(questions, sql`${topics.id} = ${questions.topicId}`) // LEFT JOIN on topic ID
-    .where(sql`${topics.userId} = ${user.userId}`) // Filtering by user ID
+    .leftJoin(questions, eq(topics.id, questions.topicId))
+    .where(eq(topics.userId, userId))
     .groupBy(topics.id);
   return topicList;
 }
 
-export async function getMyTopicDetail(id: number) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function getTopicDetailQuery({
+  id,
+  userId,
+}: Pick<TopicProps, "id" | "userId">) {
   const topic = await db.query.topics.findFirst({
-    where: (model, { eq }) => eq(model.userId, user.userId) && eq(model.id, id),
+    where: (model, { eq }) => eq(model.userId, userId) && eq(model.id, id),
     with: {
       questions: true,
     },
@@ -41,54 +39,39 @@ export async function getMyTopicDetail(id: number) {
   return topic;
 }
 
-export async function createTopicMutation(input: CreateTopic) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
-  const newTopic = await db
-    .insert(topics)
-    .values({
-      ...input,
-      userId: user.userId,
-    })
-    .returning();
+export async function createTopicMutation(input: CreateTopicProps) {
+  const [newTopic] = await db.insert(topics).values(input).returning();
   return newTopic;
 }
 
-export async function updateTopicMutation({ id, ...input }: UpdateTopic) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-  const updatedTopic = await db
+export async function updateTopicMutation({
+  id,
+  userId,
+  ...input
+}: UpdateTopicProps) {
+  const [updatedTopic] = await db
     .update(topics)
     .set(input)
-    .where(and(eq(topics.id, id), eq(topics.userId, user.userId)))
+    .where(and(eq(topics.id, id), eq(topics.userId, userId)))
     .returning();
   return updatedTopic;
 }
 
-export async function deleteTopicMutation({ id }: DeleteTopic) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
-  const deletedTopic = await db
+export async function deleteTopicsMutation({
+  userId,
+  deleteIds,
+}: DeleteTopicsProps) {
+  const deletedTopics = await db
     .delete(topics)
-    .where(and(eq(topics.id, id), eq(topics.userId, user.userId)))
+    .where(and(inArray(topics.id, deleteIds), eq(topics.userId, userId)))
     .returning();
 
-  return deletedTopic;
+  return deletedTopics;
 }
 
-export async function getTopicWithShuffledQuestions(id: number) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function checkTopicId(quizId: QuizSessionProps["quizId"]) {
   const topic = await db.query.topics.findFirst({
-    where: (model, { eq }) => eq(model.userId, user.userId) && eq(model.id, id),
-    with: {
-      questions: {
-        orderBy: sql`RANDOM()`, // Random order
-      },
-    },
+    where: (model, { eq }) => eq(model.id, quizId),
   });
   return topic;
 }

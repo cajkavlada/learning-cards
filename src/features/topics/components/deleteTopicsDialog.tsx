@@ -6,8 +6,16 @@ import { toast } from "sonner";
 import { Button, Dialog, ConfirmDialog } from "~/components/ui";
 import { Trash2 } from "lucide-react";
 import { deleteTopic } from "../actions";
+import type { TopicProps } from "../types";
+import { cn } from "~/lib/utils";
 
-export function DeleteTopicButton({ id }: { id: number }) {
+export function DeleteTopicsButton({
+  ids,
+  buttonClassName,
+}: {
+  ids: Set<TopicProps["id"]>;
+  buttonClassName?: string;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { isPending, execute } = useServerAction(deleteTopic);
@@ -20,7 +28,7 @@ export function DeleteTopicButton({ id }: { id: number }) {
             e.preventDefault();
             setDialogOpen(true);
           }}
-          className="relative h-8 w-8 -translate-y-4 translate-x-4 rounded-full p-0"
+          className={cn("h-8 w-8 rounded-full p-0", buttonClassName)}
           variant="ghost"
         >
           <Trash2 size={16} />
@@ -29,7 +37,7 @@ export function DeleteTopicButton({ id }: { id: number }) {
           <ConfirmDialog
             title="Delete topic"
             description="This will delete the topic and all its questions."
-            onSubmit={() => onSubmit(id)}
+            onSubmit={onSubmit}
             submitLoading={isPending}
           />
         </Dialog>
@@ -37,8 +45,8 @@ export function DeleteTopicButton({ id }: { id: number }) {
     </>
   );
 
-  async function onSubmit(id: number) {
-    const [data, error] = await execute({ id });
+  async function onSubmit() {
+    const [data, error] = await execute(Array.from(ids));
 
     if (data) {
       toast("Topic deleted!");

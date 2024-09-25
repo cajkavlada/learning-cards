@@ -1,42 +1,48 @@
 import "server-only";
 
-import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 import { questions } from "~/server/db/schema";
 import type {
-  CreateQuestion,
-  UpdateQuestion,
-  DeleteQuestions,
+  QuestionProps,
+  CreateQuestionProps,
+  UpdateQuestionProps,
+  DeleteQuestionsProps,
 } from "~/features/questions/types";
 import { and, eq, inArray } from "drizzle-orm";
 
-export async function getQuestionDetail(id: number) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function getQuestionDetailQuery(id: QuestionProps["id"]) {
   const question = await db.query.questions.findFirst({
     where: (model, { eq }) => eq(model.id, id),
     with: { topic: true },
   });
-
-  if (!question) {
-    throw new Error("Question not found");
-  }
-
-  if (question.topic.userId !== user.userId) {
-    throw new Error("You do not have permission for this question");
-  }
-
   return question;
 }
 
-export async function createQuestionMutation(input: CreateQuestion) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
+export async function getSimpleQuestionQuery(id: QuestionProps["id"]) {
+  const question = await db.query.questions.findFirst({
+    where: (model, { eq }) => eq(model.id, id),
+  });
+  return question;
+}
 
+export async function getUnlearnedQuestionsIdsFromTopicsQuery(
+  topicIds: QuestionProps["topicId"][],
+) {
+  const questions = await db.query.questions.findMany({
+    columns: { id: true },
+    where: (model, { inArray, eq }) =>
+      and(inArray(model.topicId, topicIds), eq(model.markedAsLearned, false)),
+  });
+  return questions.map((question) => question.id);
+}
+
+export async function createQuestionMutation({
+  userId,
+  ...input
+}: CreateQuestionProps) {
   const topic = await db.query.topics.findFirst({
     where: (model, { eq }) =>
-      and(eq(model.id, input.topicId), eq(model.userId, user.userId)),
+      and(eq(model.id, input.topicId), eq(model.userId, userId)),
   });
 
   if (!topic) {
@@ -45,14 +51,15 @@ export async function createQuestionMutation(input: CreateQuestion) {
     );
   }
 
-  const newQuestion = await db.insert(questions).values(input).returning();
+  const [newQuestion] = await db.insert(questions).values(input).returning();
   return newQuestion;
 }
 
-export async function updateQuestionMutation({ id, ...input }: UpdateQuestion) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function updateQuestionMutation({
+  id,
+  userId,
+  ...input
+}: UpdateQuestionProps) {
   const question = await db.query.questions.findFirst({
     where: (model, { eq }) => eq(model.id, id),
     with: { topic: true },
@@ -62,11 +69,11 @@ export async function updateQuestionMutation({ id, ...input }: UpdateQuestion) {
     throw new Error("Question not found");
   }
 
-  if (question.topic.userId !== user.userId) {
+  if (question.topic.userId !== userId) {
     throw new Error("You do not have permission for this question");
   }
 
-  const updatedQuestion = await db
+  const [updatedQuestion] = await db
     .update(questions)
     .set(input)
     .where(eq(questions.id, id))
@@ -74,12 +81,12 @@ export async function updateQuestionMutation({ id, ...input }: UpdateQuestion) {
   return updatedQuestion;
 }
 
-export async function deleteQuestionMutation(ids: DeleteQuestions) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
+export async function deleteQuestionsMutation({
+  userId,
+  deleteIds,
+}: DeleteQuestionsProps) {
   const questionsToDelete = await db.query.questions.findMany({
-    where: (model, { inArray }) => inArray(model.id, ids),
+    where: (model, { inArray }) => inArray(model.id, deleteIds),
     with: { topic: true },
   });
 
@@ -88,16 +95,14 @@ export async function deleteQuestionMutation(ids: DeleteQuestions) {
   }
 
   questionsToDelete.forEach((question) => {
-    if (question.topic.userId !== user.userId) {
-      throw new Error(
-        "You do not have permission to delete some of the selected questions",
-      );
+    if (question.topic.userId !== userId) {
+      throw new Error("You do not have permission for selected questions");
     }
   });
 
   const deletedQuestion = await db
     .delete(questions)
-    .where(inArray(questions.id, ids))
+    .where(inArray(questions.id, deleteIds))
     .returning();
 
   return deletedQuestion;

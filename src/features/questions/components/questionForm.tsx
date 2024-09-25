@@ -9,15 +9,15 @@ import { toast } from "sonner";
 import { Form, FormInput, FormEditor, LoadingButton } from "~/components/form";
 import { Checkbox, Label } from "~/components/ui";
 import { createQuestion, updateQuestion } from "~/features/questions/actions";
-
 import {
   questionFormSchema,
-  type Question,
-  type QuestionForm,
+  type QuestionProps,
+  type QuestionFormProps,
 } from "~/features/questions/types";
+import type { TopicProps } from "~/features/topics/types";
 import { useState } from "react";
 
-export function QuestionForm({ question }: { question?: Question }) {
+export function QuestionForm({ question }: { question?: QuestionProps }) {
   const router = useRouter();
   const { topicId } = useParams();
 
@@ -28,7 +28,7 @@ export function QuestionForm({ question }: { question?: Question }) {
   const { isPending: updateIsPending, execute: update } =
     useServerAction(updateQuestion);
 
-  const form = useForm<QuestionForm>({
+  const form = useForm<QuestionFormProps>({
     resolver: zodResolver(questionFormSchema),
     defaultValues: {
       question: question?.question ?? "",
@@ -67,10 +67,11 @@ export function QuestionForm({ question }: { question?: Question }) {
     </Form>
   );
 
-  async function onCreate(formData: QuestionForm) {
+  async function onCreate(formData: QuestionFormProps) {
+    if (!topicId) return;
     const [data, error] = await create({
       ...formData,
-      topicId: Number(topicId),
+      topicId: topicId as TopicProps["id"],
     });
     if (data) {
       toast("Question created!");
@@ -86,7 +87,7 @@ export function QuestionForm({ question }: { question?: Question }) {
     }
   }
 
-  async function onUpdate(formData: QuestionForm) {
+  async function onUpdate(formData: QuestionFormProps) {
     if (!question) return;
     const [data, error] = await update({
       ...formData,

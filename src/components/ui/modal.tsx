@@ -16,17 +16,20 @@ export function Modal({
   className,
   title,
   description,
+  onClose,
 }: {
   children: React.ReactNode;
   className?: string;
   title?: string;
   description?: string;
+  onClose?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
   const handleClose = () => {
     setIsOpen(false);
+    onClose?.();
     setTimeout(() => {
       router.back(); // Delay navigation to allow animation to complete
     }, 300);

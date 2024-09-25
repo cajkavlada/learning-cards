@@ -6,7 +6,7 @@ export function EditorButton({
   className,
   ...props
 }: {
-  isActive: boolean;
+  isActive?: boolean;
 } & ButtonProps) {
   return (
     <Button

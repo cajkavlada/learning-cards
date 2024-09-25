@@ -1,9 +1,10 @@
 import { createInsertSchema } from "drizzle-zod";
 import { questions } from "~/server/db/schema";
 import type { InferSelectModel } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
+import type { TopicProps } from "../topics/types";
 
-export type Question = InferSelectModel<typeof questions>;
+export type QuestionProps = InferSelectModel<typeof questions>;
 
 export const baseQuestionSchema = createInsertSchema(questions, {
   question: (schema) => schema.question.min(1, "Question is required"),
@@ -13,15 +14,22 @@ export const baseQuestionSchema = createInsertSchema(questions, {
 export const questionFormSchema = baseQuestionSchema
   .partial({ topicId: true })
   .omit({ id: true });
-export type QuestionForm = z.infer<typeof questionFormSchema>;
+export type QuestionFormProps = z.infer<typeof questionFormSchema>;
 
 export const createQuestionSchema = baseQuestionSchema.omit({ id: true });
-export type CreateQuestion = z.infer<typeof createQuestionSchema>;
+export type CreateQuestionProps = z.infer<typeof createQuestionSchema> &
+  Pick<TopicProps, "userId">;
 
 export const updateQuestionSchema = baseQuestionSchema
   .partial()
   .required({ id: true });
-export type UpdateQuestion = z.infer<typeof updateQuestionSchema>;
+export type UpdateQuestionProps = z.infer<typeof updateQuestionSchema> &
+  Pick<TopicProps, "userId">;
 
-export const deleteQuestionsSchema = z.array(z.number());
-export type DeleteQuestions = z.infer<typeof deleteQuestionsSchema>;
+export const deleteQuestionsSchema = baseQuestionSchema
+  .required()
+  .shape.id.array();
+export type DeleteQuestionsProps = {
+  userId: TopicProps["userId"];
+  deleteIds: z.infer<typeof deleteQuestionsSchema>;
+};

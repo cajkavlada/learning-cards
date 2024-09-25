@@ -1,13 +1,13 @@
-import { getMyTopicDetail } from "~/features/topics/queries";
 import { FormHeader } from "~/components/form";
 import { TopicForm } from "~/features/topics/components/topicForm";
+import { getTopicDetail } from "~/features/topics/actions";
 
 export default async function EditTopicPage({
   params: { topicId },
 }: {
   params: { topicId: string };
 }) {
-  const topic = await getMyTopicDetail(Number(topicId));
+  const topic = await getTopicDetail(topicId);
   if (!topic) return null;
   return (
     <div className="w-full p-4">

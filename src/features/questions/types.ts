@@ -33,3 +33,14 @@ export type DeleteQuestionsProps = {
   userId: TopicProps["userId"];
   deleteIds: z.infer<typeof deleteQuestionsSchema>;
 };
+
+export const updateQuestionLearnedStatusSchema = updateQuestionSchema
+  .pick({ markedAsLearned: true })
+  .required()
+  .extend({ ids: updateQuestionSchema.shape.id.array() });
+
+export type UpdateQuestionLearnedStatusProps = z.infer<
+  typeof updateQuestionLearnedStatusSchema
+> & {
+  userId: TopicProps["userId"];
+};

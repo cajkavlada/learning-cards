@@ -7,12 +7,14 @@ import {
   createQuestionMutation,
   updateQuestionMutation,
   deleteQuestionsMutation,
+  switchLearnedMutation,
 } from "./queries";
 import {
   createQuestionSchema,
   updateQuestionSchema,
   deleteQuestionsSchema,
   type QuestionProps,
+  updateQuestionLearnedStatusSchema,
 } from "./types";
 import { auth } from "@clerk/nextjs/server";
 
@@ -57,6 +59,20 @@ export const updateQuestion = createServerAction()
     });
     revalidatePath("/topics/[topicId]", "page");
     return updatedQuestion;
+  });
+
+export const switchLearnedStatus = createServerAction()
+  .input(updateQuestionLearnedStatusSchema)
+  .handler(async ({ input }) => {
+    const user = auth();
+    if (!user.userId) throw new Error("Not authenticated");
+
+    const updatedQuestions = await switchLearnedMutation({
+      ...input,
+      userId: user.userId,
+    });
+    revalidatePath("/topics/[topicId]", "page");
+    return updatedQuestions;
   });
 
 export const deleteQuestions = createServerAction()

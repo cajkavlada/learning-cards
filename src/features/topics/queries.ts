@@ -9,7 +9,6 @@ import type {
   UpdateTopicProps,
   DeleteTopicsProps,
 } from "~/features/topics/types";
-import type { QuizSessionProps } from "../quiz/types";
 
 export async function getTopicsByUserQuery(userId: TopicProps["userId"]) {
   const topicList = await db
@@ -33,7 +32,9 @@ export async function getTopicDetailQuery({
   const topic = await db.query.topics.findFirst({
     where: (model, { eq }) => eq(model.userId, userId) && eq(model.id, id),
     with: {
-      questions: true,
+      questions: {
+        orderBy: (questionModel) => questionModel.createdAt,
+      },
     },
   });
   return topic;

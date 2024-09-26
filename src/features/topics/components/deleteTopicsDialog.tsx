@@ -49,7 +49,7 @@ export function DeleteTopicsButton({
     const [data, error] = await execute(Array.from(ids));
 
     if (data) {
-      toast("Topic deleted!");
+      toast("Topic(s) deleted!");
       setDialogOpen(false);
     }
     if (error) {

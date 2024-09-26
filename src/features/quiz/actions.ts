@@ -31,6 +31,10 @@ export async function getCurrentQuestionInfo() {
     throw new Error("Quiz session not found");
   }
 
+  if (quizSession.questionsIds.length === 0) {
+    throw new Error("No unlearned questions found in quiz session");
+  }
+
   const { questionsIds, currentQuestionIndex } = quizSession;
 
   const currentQuestionId = questionsIds[currentQuestionIndex];

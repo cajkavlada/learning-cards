@@ -38,5 +38,9 @@ export function useSelectInList<T extends ItemWithID>(list: T[]) {
     [itemIds],
   );
 
-  return { checkItem, checkAll, selectedItems, allSelected };
+  const resetSelection = useCallback(() => {
+    setSelectedItems(new Set());
+  }, []);
+
+  return { checkItem, checkAll, resetSelection, selectedItems, allSelected };
 }

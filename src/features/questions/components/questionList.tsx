@@ -13,18 +13,28 @@ import {
   Checkbox,
   CardHeader,
   CardTitle,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
 } from "~/components/ui";
-import { DeleteQuestionsButton } from "./deleteQuestionsDialog";
 import type { QuestionProps } from "../types";
 import { usePathname } from "next/navigation";
-import { CircleCheckBig, Pencil } from "lucide-react";
+import { CircleCheckBig, EllipsisVertical, Pencil, Trash2 } from "lucide-react";
 import { SanitizedHTML } from "~/components/common/SanitizedHTML";
 import { useSelectInList } from "~/utils/useSelectInList";
+import { useDialog } from "~/components/layout/dialog/useDialog";
+import { DeleteQuestionsDialog } from "./deleteQuestionsDialog";
+import { switchLearnedStatus } from "../actions";
+import { useServerAction } from "zsa-react";
 
 export function QuestionList({ questions }: { questions: QuestionProps[] }) {
   const pathname = usePathname();
-  const { checkItem, checkAll, selectedItems, allSelected } =
+  const { openDialog } = useDialog();
+  const { checkItem, checkAll, resetSelection, selectedItems, allSelected } =
     useSelectInList(questions);
+
+  const { execute: switchLearned } = useServerAction(switchLearnedStatus);
 
   return (
     <Card className="mx-4">
@@ -34,7 +44,46 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
             <Checkbox checked={allSelected} onCheckedChange={checkAll} />
           )}
           {selectedItems.size > 0 && (
-            <DeleteQuestionsButton ids={selectedItems} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="h-8 w-8 rounded-full p-0" variant="ghost">
+                  <EllipsisVertical className="h-6 w-6 cursor-pointer text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {" "}
+                <DropdownMenuItem
+                  className="text-red-500"
+                  onClick={() =>
+                    openDialog(<DeleteQuestionsDialog ids={selectedItems} />)
+                  }
+                >
+                  Delete selected
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await switchLearned({
+                      ids: Array.from(selectedItems),
+                      markedAsLearned: true,
+                    });
+                    resetSelection();
+                  }}
+                >
+                  Mark as learned
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await switchLearned({
+                      ids: Array.from(selectedItems),
+                      markedAsLearned: false,
+                    });
+                    resetSelection();
+                  }}
+                >
+                  Mark as unlearned
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           <CardTitle>Questions</CardTitle>
         </div>
@@ -78,7 +127,22 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
                         <Pencil size={16} />
                       </Link>
                     </Button>
-                    <DeleteQuestionsButton ids={new Set([question.id])} />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openDialog(
+                            <DeleteQuestionsDialog
+                              ids={new Set([question.id])}
+                            />,
+                          );
+                        }}
+                        className="h-8 w-8 rounded-full p-0"
+                        variant="ghost"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
                   </div>
                   <AccordionContent>
                     <Card>

@@ -7,7 +7,8 @@ import type {
   CreateQuestionProps,
   UpdateQuestionProps,
   DeleteQuestionsProps,
-} from "~/features/questions/types";
+  UpdateQuestionLearnedStatusProps,
+} from "./types";
 import { and, eq, inArray } from "drizzle-orm";
 
 export async function getQuestionDetailQuery(id: QuestionProps["id"]) {
@@ -79,6 +80,35 @@ export async function updateQuestionMutation({
     .where(eq(questions.id, id))
     .returning();
   return updatedQuestion;
+}
+
+export async function switchLearnedMutation({
+  userId,
+  ids,
+  markedAsLearned,
+}: UpdateQuestionLearnedStatusProps) {
+  const questionsToSwitch = await db.query.questions.findMany({
+    where: (model, { inArray }) => inArray(model.id, ids),
+    with: { topic: true },
+  });
+
+  if (questionsToSwitch.length === 0) {
+    throw new Error("No questions found");
+  }
+
+  questionsToSwitch.forEach((question) => {
+    if (question.topic.userId !== userId) {
+      throw new Error("You do not have permission for selected questions");
+    }
+  });
+
+  const updatedQuestions = await db
+    .update(questions)
+    .set({ markedAsLearned })
+    .where(inArray(questions.id, ids))
+    .returning();
+
+  return updatedQuestions;
 }
 
 export async function deleteQuestionsMutation({

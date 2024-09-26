@@ -1,54 +1,37 @@
 "use client";
 
-import { useState } from "react";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
-import { Button, Dialog, ConfirmDialog } from "~/components/ui";
-import { Trash2 } from "lucide-react";
 import { deleteQuestions } from "../actions";
 import type { QuestionProps } from "../types";
+import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
+import { useDialog } from "~/components/layout/dialog/useDialog";
 
-export function DeleteQuestionsButton({
+export function DeleteQuestionsDialog({
   ids,
-  ...props
 }: {
   ids: Set<QuestionProps["id"]>;
-} & React.HTMLProps<HTMLDivElement>) {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
+}) {
   const { isPending, execute } = useServerAction(deleteQuestions);
+  const { closeDialog } = useDialog();
 
   return (
-    <>
-      <div {...props} onClick={(e) => e.stopPropagation()}>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            setDialogOpen(true);
-          }}
-          className="h-8 w-8 rounded-full p-0"
-          variant="ghost"
-        >
-          <Trash2 size={16} />
-        </Button>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <ConfirmDialog
-            title="Delete question"
-            description="This will delete selected question."
-            onSubmit={onSubmit}
-            submitLoading={isPending}
-          />
-        </Dialog>
-      </div>
-    </>
+    <DialogLayout
+      title="Delete question"
+      submitLabel="Delete"
+      submitLoading={isPending}
+      onSubmit={onSubmit}
+    >
+      Are you sure, you want to delete selected question(s).
+    </DialogLayout>
   );
 
   async function onSubmit() {
     const [data, error] = await execute(Array.from(ids));
 
     if (data) {
-      toast("Question deleted!");
-      setDialogOpen(false);
+      toast("Question(s) deleted!");
+      closeDialog();
     }
     if (error) {
       toast(error.name, { description: error.message });

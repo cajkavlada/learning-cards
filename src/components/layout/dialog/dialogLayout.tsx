@@ -7,6 +7,7 @@ import {
 } from "../../ui/dialog";
 import { Button } from "../../ui/button";
 import { useDialog } from "./useDialog";
+import { LoadingButton } from "~/components/form";
 
 export function DialogLayout({
   children,
@@ -16,6 +17,7 @@ export function DialogLayout({
   submitLabel,
   onSubmit,
   onCancel,
+  submitLoading,
   className,
 }: {
   children: React.ReactNode;
@@ -25,6 +27,7 @@ export function DialogLayout({
   submitLabel?: string;
   onSubmit?: () => void;
   onCancel?: () => void;
+  submitLoading?: boolean;
   className?: string;
 }) {
   const { closeDialog } = useDialog();
@@ -51,7 +54,9 @@ export function DialogLayout({
           </Button>
         )}
         {submitLabel && onSubmit && (
-          <Button onClick={onSubmit}>{submitLabel}</Button>
+          <LoadingButton onClick={onSubmit} loading={submitLoading}>
+            {submitLabel}
+          </LoadingButton>
         )}
       </DialogFooter>
     </DialogContent>

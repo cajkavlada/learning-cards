@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
-import { Label } from "~/components/ui";
-import { Switch } from "~/components/ui/switch";
+import { Label, Switch } from "~/components/ui";
 import { switchLearned } from "../actions";
-import { toast } from "sonner";
 import type { QuestionProps } from "~/features/questions/types";
+import { toast } from "sonner";
 
 export function LearnToggle({
   markedAsLearned,

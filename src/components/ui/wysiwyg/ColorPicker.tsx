@@ -32,7 +32,7 @@ export function ColorPicker({
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button className="h-8 w-8 p-0" variant="outline">
+        <Button className="h-8 w-8 p-0" variant="outline" type="button">
           <Palette size={16} />
         </Button>
       </HoverCardTrigger>

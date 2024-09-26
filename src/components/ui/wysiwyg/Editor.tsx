@@ -11,8 +11,8 @@ import { forwardRef } from "react";
 
 export const Editor = forwardRef<
   HTMLDivElement,
-  { value: string; onChange: (text?: string) => void }
->(({ value, onChange }, ref) => {
+  { value: string; onChange?: (text?: string) => void; editable?: boolean }
+>(({ value, onChange, editable = true }, ref) => {
   const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
     TextStyle.configure(/*{ types: [ListItem.name] }*/),
@@ -29,10 +29,11 @@ export const Editor = forwardRef<
   ];
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="h-full w-full">
       <EditorProvider
-        onUpdate={({ editor }) => onChange(editor.getHTML())}
-        slotBefore={<MenuBar value={value} />}
+        onUpdate={({ editor }) => onChange?.(editor.getHTML())}
+        editable={editable}
+        slotBefore={editable ? <MenuBar value={value} /> : null}
         extensions={extensions}
         immediatelyRender={false}
         content={value}

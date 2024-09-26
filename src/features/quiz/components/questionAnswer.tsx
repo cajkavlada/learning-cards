@@ -9,6 +9,7 @@ import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { LoadingButton } from "~/components/form";
 import { LearnToggle } from "./learnToggle";
+import { Editor } from "~/components/ui/wysiwyg/Editor";
 
 export function QuestionAnswer({
   question,
@@ -30,12 +31,7 @@ export function QuestionAnswer({
 
   return (
     <>
-      {showAnswer && (
-        <SanitizedHTML
-          className="mt-4 w-full flex-1 truncate text-center"
-          html={question.answer}
-        />
-      )}
+      {showAnswer && <Editor value={question.answer} editable={false} />}
       <div className="flex w-full gap-4">
         {!isFirst && (
           <LoadingButton

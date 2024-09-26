@@ -21,12 +21,12 @@ import {
 import type { QuestionProps } from "../types";
 import { usePathname } from "next/navigation";
 import { CircleCheckBig, EllipsisVertical, Pencil, Trash2 } from "lucide-react";
-import { SanitizedHTML } from "~/components/common/SanitizedHTML";
 import { useSelectInList } from "~/utils/useSelectInList";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 import { DeleteQuestionsDialog } from "./deleteQuestionsDialog";
 import { switchLearnedStatus } from "../actions";
 import { useServerAction } from "zsa-react";
+import { Editor } from "~/components/ui/wysiwyg/Editor";
 
 export function QuestionList({ questions }: { questions: QuestionProps[] }) {
   const pathname = usePathname();
@@ -145,14 +145,7 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
                     </div>
                   </div>
                   <AccordionContent>
-                    <Card>
-                      <CardContent className="p-6">
-                        <SanitizedHTML
-                          className="truncate"
-                          html={question.answer}
-                        />
-                      </CardContent>
-                    </Card>
+                    <Editor value={question.answer} editable={false} />
                   </AccordionContent>
                 </AccordionItem>
               </li>

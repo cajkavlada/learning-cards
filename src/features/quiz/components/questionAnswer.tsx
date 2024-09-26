@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { SanitizedHTML } from "~/components/common/SanitizedHTML";
 import { Button } from "~/components/ui";
 import type { QuestionProps } from "~/features/questions/types";
 import { nextQuestion, previousQuestion, restartQuizSession } from "../actions";

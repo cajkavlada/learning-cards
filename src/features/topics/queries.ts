@@ -68,10 +68,3 @@ export async function deleteTopicsMutation({
 
   return deletedTopics;
 }
-
-export async function checkTopicId(quizId: QuizSessionProps["quizId"]) {
-  const topic = await db.query.topics.findFirst({
-    where: (model, { eq }) => eq(model.id, quizId),
-  });
-  return topic;
-}

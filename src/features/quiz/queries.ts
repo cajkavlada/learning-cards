@@ -34,27 +34,27 @@ export async function deleteQuizSessionMutation(
   return deletedQuizSession;
 }
 
-export async function getQuizTopicsQuery(quizId: QuizSessionProps["quizId"]) {
+export async function getQuizTopicsQuery(userId: QuizSessionProps["userId"]) {
   const quizTopics = await db.query.quizToTopics.findMany({
     columns: { topicId: true },
-    where: (model, { eq }) => eq(model.quizId, quizId),
+    where: (model, { eq }) => eq(model.userId, userId),
   });
 
   return quizTopics.map((topic) => topic.topicId);
 }
 
 export async function addQuizTopicLinkMutation({
-  quizId,
+  userId,
   topicIds,
 }: {
-  quizId: QuizSessionProps["quizId"];
+  userId: QuizSessionProps["userId"];
   topicIds: TopicProps["id"][];
 }) {
   const quizToTopic = await db
     .insert(quizToTopics)
     .values(
       topicIds.map((topicId) => ({
-        quizId,
+        userId,
         topicId,
       })),
     )
@@ -72,4 +72,14 @@ export async function updateQuizSessionMutation({
     .where(eq(quizSessions.userId, userId))
     .returning();
   return updatedQuizSession;
+}
+
+export async function getQuizSessionTopicsQuery(
+  userId: QuizSessionProps["userId"],
+) {
+  const quizTopicLink = await db.query.quizToTopics.findMany({
+    where: (model, { eq }) => eq(model.userId, userId),
+  });
+
+  return quizTopicLink.map((link) => link.topicId);
 }

@@ -1,8 +1,8 @@
-import { Modal } from "~/components/ui";
+import { LinkDialog } from "~/components/layout/dialog/linkDialog";
 import { getTopicDetail } from "~/features/topics/actions";
 import { TopicForm } from "~/features/topics/components/topicForm";
 
-export default async function EditTopicModalPage({
+export default async function EditTopicDialogPage({
   params: { topicId },
 }: {
   params: { topicId: string };
@@ -10,8 +10,8 @@ export default async function EditTopicModalPage({
   const topic = await getTopicDetail(topicId);
   if (!topic) return null;
   return (
-    <Modal title="Edit topic" className="sm:max-w-[800px]">
+    <LinkDialog title="Edit topic" className="sm:max-w-[800px]">
       <TopicForm topic={topic} />
-    </Modal>
+    </LinkDialog>
   );
 }

@@ -1,15 +1,10 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui";
+import { Button } from "~/components/ui";
 import { getTopicDetail } from "~/features/topics/actions";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";
 import { QuestionList } from "~/features/questions/components/questionList";
+import { StartQuizButton } from "~/features/quiz/components/startQuizButton";
 
 export default async function TopicPage({
   params: { topicId },
@@ -34,9 +29,7 @@ export default async function TopicPage({
               Create question
             </Link>
           </Button>
-          <Button asChild>
-            <Link href={`/quiz/${topicId}`}>Start quiz</Link>
-          </Button>
+          <StartQuizButton topicIds={[topicId]} />
         </PageHeader>
         <QuestionList questions={topic.questions} />
       </div>

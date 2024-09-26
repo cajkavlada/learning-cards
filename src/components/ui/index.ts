@@ -5,7 +5,6 @@ export * from "./dialog";
 export * from "./sonner";
 export * from "./form";
 export * from "./card";
-export * from "./modal";
 export * from "./confirmDialog";
 export * from "./checkbox";
 export * from "./accordion";

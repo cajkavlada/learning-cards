@@ -6,6 +6,7 @@ import { Navbar } from "../components/layout/navbar";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import { DialogProvider } from "~/components/layout/dialog/dialogProvider";
 
 export const metadata: Metadata = {
   title: "Learning cards",
@@ -20,18 +21,20 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <TooltipProvider>
-        <html lang="en" className={`${GeistSans.variable}`}>
-          <body className="flex h-screen flex-col">
-            <nav className="flex h-16 w-full items-center p-4">
-              <Navbar />
-            </nav>
-            <main className="flex flex-1 flex-col items-center overflow-auto bg-gray-100">
-              {children}
-            </main>
-            {modal}
-            <Toaster />
-          </body>
-        </html>
+        <DialogProvider>
+          <html lang="en" className={`${GeistSans.variable}`}>
+            <body className="flex h-screen flex-col">
+              <nav className="flex h-16 w-full items-center p-4">
+                <Navbar />
+              </nav>
+              <main className="flex flex-1 flex-col items-center overflow-auto bg-gray-100">
+                {children}
+              </main>
+              {modal}
+              <Toaster />
+            </body>
+          </html>
+        </DialogProvider>
       </TooltipProvider>
     </ClerkProvider>
   );

@@ -11,7 +11,7 @@ import {
 } from "~/components/ui";
 import { cn } from "~/lib/utils";
 
-export function Modal({
+export function LinkDialog({
   children,
   className,
   title,

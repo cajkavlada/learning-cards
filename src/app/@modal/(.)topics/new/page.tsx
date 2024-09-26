@@ -1,10 +1,10 @@
-import { Modal } from "~/components/ui";
+import { LinkDialog } from "~/components/layout/dialog/linkDialog";
 import { TopicForm } from "~/features/topics/components/topicForm";
 
-export default async function CreateTopicModalPage() {
+export default async function CreateTopicDialogPage() {
   return (
-    <Modal title="Create topic">
+    <LinkDialog title="Create topic">
       <TopicForm />
-    </Modal>
+    </LinkDialog>
   );
 }

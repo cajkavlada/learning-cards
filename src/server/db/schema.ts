@@ -66,8 +66,8 @@ export const questionsRelations = relations(questions, ({ one }) => ({
 export const quizToTopics = createTable(
   "quiz_to_topics",
   {
-    quizId: uuid("quiz_id")
-      .references(() => quizSessions.quizId, {
+    userId: varchar("userId_id")
+      .references(() => quizSessions.userId, {
         onDelete: "cascade",
       })
       .notNull(),
@@ -78,15 +78,15 @@ export const quizToTopics = createTable(
       .notNull(),
   },
   (item) => ({
-    pk: primaryKey({ columns: [item.quizId, item.topicId] }),
-    quizTopicIndex: index("quiz_topic_idx").on(item.quizId, item.topicId),
+    pk: primaryKey({ columns: [item.userId, item.topicId] }),
+    quizTopicIndex: index("quiz_topic_idx").on(item.userId, item.topicId),
   }),
 );
 
 export const quizToTopicsRelations = relations(quizToTopics, ({ one }) => ({
   quiz: one(quizSessions, {
-    fields: [quizToTopics.quizId],
-    references: [quizSessions.quizId],
+    fields: [quizToTopics.userId],
+    references: [quizSessions.userId],
   }),
   topic: one(topics, {
     fields: [quizToTopics.topicId],
@@ -96,7 +96,6 @@ export const quizToTopicsRelations = relations(quizToTopics, ({ one }) => ({
 
 export const quizSessions = createTable("quiz_sessions", {
   userId: varchar("user_id", { length: 255 }).primaryKey(),
-  quizId: uuid("quiz_id").notNull(),
   questionsIds: uuid("question_ids").array().notNull(),
   currentQuestionIndex: integer("current_question_index").default(0).notNull(),
   startedAt: timestamp("created_at", { withTimezone: true })

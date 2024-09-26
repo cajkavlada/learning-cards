@@ -1,45 +1,35 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { v4 as uuidv4 } from "uuid";
 import {
   addQuizTopicLinkMutation,
   createQuizSessionMutation,
   deleteQuizSessionMutation,
   getQuizSessionQuery,
+  getQuizSessionTopicsQuery,
   getQuizTopicsQuery,
   updateQuizSessionMutation,
 } from "./queries";
-import { checkTopicId } from "../topics/queries";
 import {
   getSimpleQuestionQuery,
   getUnlearnedQuestionsIdsFromTopicsQuery,
   updateQuestionMutation,
 } from "../questions/queries";
-import { baseQuizSessionSchema, type QuizSessionProps } from "./types";
-import {
-  baseTopicSchema,
-  updateTopicSchema,
-  type TopicProps,
-} from "../topics/types";
+import { updateTopicSchema, type TopicProps } from "../topics/types";
 import { createServerAction } from "zsa";
 import { revalidatePath } from "next/cache";
 import { shuffleArray } from "~/utils/shuffle";
 import { baseQuestionSchema } from "../questions/types";
 import { redirect } from "next/navigation";
-import { db } from "~/server/db";
 
-export async function getCurrentQuestionInfo(
-  quizId: QuizSessionProps["quizId"],
-) {
+export async function getCurrentQuestionInfo() {
   const user = auth();
   if (!user.userId) throw new Error("Not authenticated");
 
-  let quizSession = await getQuizSessionQuery(user.userId);
+  const quizSession = await getQuizSessionQuery(user.userId);
   if (!quizSession) {
-    quizSession = await createQuizSession(quizId, user.userId);
+    throw new Error("Quiz session not found");
   }
-  if (quizSession.quizId !== quizId) return null;
 
   const { questionsIds, currentQuestionIndex } = quizSession;
 
@@ -48,26 +38,6 @@ export async function getCurrentQuestionInfo(
 
   const currentQuestion = await getSimpleQuestionQuery(currentQuestionId);
 
-  const a = await db.query.topics.findFirst({
-    where: (model, { eq }) => eq(model.id, quizId),
-    with: {
-      questions: true,
-      quizesToTopics: true,
-    },
-  });
-
-  const b = await db.query.quizSessions.findFirst({
-    where: (model, { eq }) => eq(model.userId, user.userId),
-    with: {
-      quizToTopics: true,
-    },
-  });
-
-  console.log("-----------");
-  console.log(a);
-  console.log(".............");
-  console.log(b);
-
   return {
     currentQuestion,
     index: currentQuestionIndex,
@@ -75,43 +45,42 @@ export async function getCurrentQuestionInfo(
   };
 }
 
-export async function checkQuizSessionConflict(
-  quizId: QuizSessionProps["quizId"],
-) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-  const quizSession = await getQuizSessionQuery(user.userId);
-  if (!quizSession || quizSession.quizId === quizId) return null;
+export const checkQuizSessionConflict = createServerAction()
+  .input(updateTopicSchema.shape.id.array())
+  .handler(async ({ input }) => {
+    const user = auth();
+    if (!user.userId) throw new Error("Not authenticated");
+    const quizSessionTopics = await getQuizSessionTopicsQuery(user.userId);
 
-  return quizSession;
-}
-
-async function createQuizSession(
-  quizId: QuizSessionProps["quizId"],
-  userId: QuizSessionProps["userId"],
-) {
-  let quizTopicIds = await getQuizTopicsQuery(quizId);
-
-  if (!quizTopicIds.length && (await checkTopicId(quizId))) {
-    await addQuizTopicLinkMutation({ quizId, topicIds: [quizId] });
-    quizTopicIds = [quizId];
-  }
-  if (!quizTopicIds.length) throw new Error("Quiz topics could not be found");
-
-  const quizQuestionIds =
-    await getUnlearnedQuestionsIdsFromTopicsQuery(quizTopicIds);
-
-  const shuffledQuestionIds = shuffleArray(quizQuestionIds);
-
-  const quizSession = await createQuizSessionMutation({
-    userId,
-    quizId,
-    questionsIds: shuffledQuestionIds,
+    return !arrayItemsAreEqual(input, quizSessionTopics);
   });
-  if (!quizSession) throw new Error("Quiz session could not be created");
 
-  return quizSession;
+function arrayItemsAreEqual(arr1: string[], arr2: string[]) {
+  if (arr1.length !== arr2.length) return false;
+
+  const sortedArr1 = [...arr1].sort();
+  const sortedArr2 = [...arr2].sort();
+  return sortedArr1.every((value, index) => value === sortedArr2[index]);
 }
+
+export const startNewQuizSession = createServerAction()
+  .input(updateTopicSchema.shape.id.array())
+  .handler(async ({ input }) => {
+    const user = auth();
+    if (!user.userId) throw new Error("Not authenticated");
+
+    await deleteQuizSessionMutation(user.userId);
+
+    const shuffledQuestionIds = await getShuffledQuestionsIds(input);
+
+    await createQuizSessionMutation({
+      userId: user.userId,
+      questionsIds: shuffledQuestionIds,
+    });
+
+    await addQuizTopicLinkMutation({ userId: user.userId, topicIds: input });
+    redirect(`/quiz`);
+  });
 
 export const restartQuizSession = createServerAction().handler(async () => {
   const user = auth();
@@ -120,12 +89,9 @@ export const restartQuizSession = createServerAction().handler(async () => {
   const quizSession = await getQuizSessionQuery(user.userId);
   if (!quizSession) throw new Error("Quiz session not found");
 
-  const quizTopicIds = await getQuizTopicsQuery(quizSession.quizId);
+  const quizTopicIds = await getQuizTopicsQuery(quizSession.userId);
 
-  const quizQuestionIds =
-    await getUnlearnedQuestionsIdsFromTopicsQuery(quizTopicIds);
-
-  const shuffledQuestionIds = shuffleArray(quizQuestionIds);
+  const shuffledQuestionIds = await getShuffledQuestionsIds(quizTopicIds);
 
   const updatedQuizSession = await updateQuizSessionMutation({
     userId: user.userId,
@@ -133,24 +99,17 @@ export const restartQuizSession = createServerAction().handler(async () => {
     questionsIds: shuffledQuestionIds,
   });
 
-  revalidatePath("/quiz/[quizId]", "page");
+  revalidatePath("/quiz");
 
   return updatedQuizSession;
 });
 
-export const overideQuizSession = createServerAction()
-  .input(baseQuizSessionSchema.shape.quizId)
-  .handler(async ({ input }) => {
-    const user = auth();
-    if (!user.userId) throw new Error("Not authenticated");
+async function getShuffledQuestionsIds(topicIds: TopicProps["id"][]) {
+  const quizQuestionIds =
+    await getUnlearnedQuestionsIdsFromTopicsQuery(topicIds);
 
-    await deleteQuizSessionMutation(user.userId);
-    const quizSession = await createQuizSession(input, user.userId);
-
-    revalidatePath("/quiz/[quizId]", "page");
-
-    return quizSession;
-  });
+  return shuffleArray(quizQuestionIds);
+}
 
 export const nextQuestion = createServerAction().handler(async () => {
   const user = auth();
@@ -213,15 +172,4 @@ export const switchLearned = createServerAction()
     revalidatePath("/quiz/[quizId]", "page");
 
     return null;
-  });
-
-export const createMultiquiz = createServerAction()
-  .input(updateTopicSchema.shape.id.array())
-  .handler(async ({ input }) => {
-    const user = auth();
-    if (!user.userId) throw new Error("Not authenticated");
-    const quizId = uuidv4();
-    await addQuizTopicLinkMutation({ quizId, topicIds: input });
-    redirect(`/quiz/${quizId}`);
-    return quizId;
   });

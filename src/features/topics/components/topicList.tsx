@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -15,8 +14,7 @@ import { Pencil } from "lucide-react";
 import type { TopicPropsWithQuestionCount } from "../types";
 import { useSelectInList } from "~/utils/useSelectInList";
 import { DeleteTopicsButton } from "./deleteTopicsDialog";
-import { useServerAction } from "zsa-react";
-import { createMultiquiz } from "~/features/quiz/actions";
+import { StartQuizButton } from "~/features/quiz/components/startQuizButton";
 
 export function TopicList({
   topics,
@@ -25,7 +23,6 @@ export function TopicList({
 }) {
   const { checkItem, checkAll, selectedItems, allSelected } =
     useSelectInList(topics);
-  const { execute: startMultiQuiz } = useServerAction(createMultiquiz);
 
   return (
     <>
@@ -36,9 +33,7 @@ export function TopicList({
         {selectedItems.size > 0 && (
           <>
             <DeleteTopicsButton ids={selectedItems} />
-            <Button onClick={() => startMultiQuiz(Array.from(selectedItems))}>
-              Start Multi-Quiz
-            </Button>
+            <StartQuizButton topicIds={Array.from(selectedItems)} />
           </>
         )}
       </div>

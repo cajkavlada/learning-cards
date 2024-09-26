@@ -1,12 +1,8 @@
 import { getCurrentQuestionInfo } from "~/features/quiz/actions";
 import { QuestionAnswer } from "~/features/quiz/components/questionAnswer";
 
-export default async function QuizPage({
-  params: { quizId },
-}: {
-  params: { quizId: string };
-}) {
-  const currentQuestionInfo = await getCurrentQuestionInfo(quizId);
+export default async function QuizPage() {
+  const currentQuestionInfo = await getCurrentQuestionInfo();
 
   if (!currentQuestionInfo?.currentQuestion) return null;
   const { currentQuestion, index, total } = currentQuestionInfo;

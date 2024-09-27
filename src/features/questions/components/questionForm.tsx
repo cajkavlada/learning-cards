@@ -40,7 +40,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
     <Form
       providerProps={form}
       onSubmit={form.handleSubmit(question ? onUpdate : onCreate)}
-      className="flex min-h-0 w-full flex-1 flex-col"
+      className="flex min-h-0 w-full flex-1 flex-col px-6"
     >
       <div className="flex min-h-0 flex-col gap-4 py-4">
         <FormInput name="question" control={form.control} label="Question" />

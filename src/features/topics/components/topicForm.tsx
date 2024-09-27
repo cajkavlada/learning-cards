@@ -33,7 +33,7 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
     <Form
       providerProps={form}
       onSubmit={form.handleSubmit(onSubmit)}
-      className="w-full"
+      className="w-full px-6"
     >
       <div className="flex flex-col gap-4 py-4">
         <FormInput name="name" control={form.control} label="Name" />

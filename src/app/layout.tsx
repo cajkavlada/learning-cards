@@ -28,9 +28,7 @@ export default function RootLayout({
                 <Navbar />
               </nav>
               <main className="flex-1 items-center overflow-auto bg-gray-100">
-                <div className="container mx-auto flex h-full flex-col md:py-8">
-                  {children}
-                </div>
+                {children}
               </main>
               {modal}
               <Toaster />

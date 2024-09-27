@@ -12,11 +12,10 @@ export default async function TopicPage({
   params: { topicId: string };
 }) {
   const topic = await getTopicDetail(topicId);
-
   if (!topic) return null;
 
   return (
-    <div className="flex min-h-0 flex-col bg-white pb-6 shadow-md md:rounded-lg md:p-6">
+    <>
       <PageHeader title={topic.name} description={topic.description}>
         <div className="ml-auto flex gap-4">
           <Button asChild variant="outline" className="min-w-9 p-0">
@@ -29,10 +28,10 @@ export default async function TopicPage({
               Create question
             </Link>
           </Button>
-          <StartQuizButton topicIds={[topicId]} />
+          <StartQuizButton questions={topic.questions} topicIds={[topicId]} />
         </div>
       </PageHeader>
       <QuestionList questions={topic.questions} />
-    </div>
+    </>
   );
 }

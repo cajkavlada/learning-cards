@@ -41,8 +41,8 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
     [questions],
   );
   return (
-    <Card className="mx-4 flex min-h-0 flex-col">
-      <CardHeader>
+    <Card className="mx-4 mb-6 flex min-h-0 flex-col md:mb-2">
+      <CardHeader className="border-b-2">
         <div className="flex h-8 items-center gap-2">
           {questions.length > 0 && (
             <Checkbox checked={allSelected} onCheckedChange={checkAll} />
@@ -95,6 +95,11 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
         </div>
       </CardHeader>
       <CardContent className="flex-1 overflow-auto">
+        {questions.length === 0 && (
+          <div className="flex h-full items-center justify-center">
+            No questions found
+          </div>
+        )}
         <Accordion type="single" collapsible className="w-full">
           <ul>
             {questions.map((question) => (

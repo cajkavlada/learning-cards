@@ -6,11 +6,15 @@
 - [x] Setup basic UI of card list with mock data
 - [x] Setup and connect to db
 - [x] Attach database to UI
-- [ ] Add auth
-- [ ] Set up routing: ListView, TestView, TopicsView
-- [ ] Create, delete, update, list topic
-- [ ] Create, delete, update, list questions
-- [ ] TestView logic
-- [ ] Mark/Unmark as learned logic (TestView[only Mark] and ListView)
+- [x] Add auth
+- [x] Set up routing: ListView, TestView, TopicsView
+- [x] Create, delete, update, list topic
+- [x] Create, delete, update, list questions
+- [x] TestView logic
+- [x] Mark/Unmark as learned logic (TestView[only Mark] and ListView)
+- [x] Responsiveness
+- [-] Main page // still work to be done
+- [ ] Protected routes
+- [ ] Dark theme
 - [ ] Analytics
 - [ ] Postlimiting

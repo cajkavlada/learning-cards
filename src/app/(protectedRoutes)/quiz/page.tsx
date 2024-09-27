@@ -1,7 +1,7 @@
 import { getCurrentQuestionInfo } from "~/features/quiz/actions";
 import { QuestionAnswer } from "~/features/quiz/components/questionAnswer";
 
-export default async function QuizPage() {
+export default async function TestPage() {
   const currentQuestionInfo = await getCurrentQuestionInfo();
 
   if (!currentQuestionInfo?.currentQuestion) return null;

@@ -36,8 +36,8 @@ export function LinkDialog({
   };
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className={cn("gap-0", className)}>
-        <DialogHeader>
+      <DialogContent className={cn("gap-0 px-0", className)}>
+        <DialogHeader className="px-6">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>

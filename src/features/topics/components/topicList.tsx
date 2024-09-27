@@ -26,6 +26,11 @@ export function TopicList({
 
   return (
     <>
+      {topics.length === 0 && (
+        <div className="flex h-full items-center justify-center">
+          No topics found
+        </div>
+      )}
       <div className="flex h-8 items-center gap-2 px-4 pb-4">
         {topics.length > 0 && (
           <Checkbox checked={allSelected} onCheckedChange={checkAll} />

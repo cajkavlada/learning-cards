@@ -8,7 +8,7 @@ export function FormHeader({
   return (
     <h2
       className={cn(
-        "text-lg font-semibold leading-none tracking-tight",
+        "px-6 text-lg font-semibold leading-none tracking-tight",
         className,
       )}
       {...props}

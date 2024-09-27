@@ -18,7 +18,7 @@ export function PageHeader({
         </h1>
         {children}
       </div>
-      {description && <p className="pt-2">{description}</p>}
+      {description && <p className="whitespace-pre-line pt-2">{description}</p>}
     </div>
   );
 }

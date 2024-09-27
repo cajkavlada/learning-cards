@@ -40,11 +40,16 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
     <Form
       providerProps={form}
       onSubmit={form.handleSubmit(question ? onUpdate : onCreate)}
-      className="w-full"
+      className="flex min-h-0 w-full flex-1 flex-col"
     >
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex min-h-0 flex-col gap-4 py-4">
         <FormInput name="question" control={form.control} label="Question" />
-        <FormEditor name="answer" control={form.control} label="Answer" />
+        <FormEditor
+          name="answer"
+          control={form.control}
+          label="Answer"
+          className="flex min-h-0 flex-col"
+        />
       </div>
       <div className="flex items-center justify-end gap-4">
         {!question && (

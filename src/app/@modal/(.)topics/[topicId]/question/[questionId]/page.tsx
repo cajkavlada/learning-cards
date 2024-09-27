@@ -10,7 +10,10 @@ export default async function QuestionDetailDialogPage({
   const question = await getQuestionDetail(questionId);
   if (!question) return null;
   return (
-    <LinkDialog title="Update question" className="sm:max-w-[800px]">
+    <LinkDialog
+      title="Update question"
+      className="flex max-h-full flex-col sm:max-w-[800px]"
+    >
       <QuestionForm question={question} />
     </LinkDialog>
   );

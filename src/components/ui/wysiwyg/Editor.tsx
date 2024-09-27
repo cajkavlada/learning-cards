@@ -29,13 +29,16 @@ export const Editor = forwardRef<
   ];
 
   return (
-    <div ref={ref} className="h-full w-full">
+    <div ref={ref} className="tiptap-outer-div flex min-h-0 w-full flex-col">
       <EditorProvider
         onUpdate={({ editor }) => onChange?.(editor.getHTML())}
         editable={editable}
         slotBefore={editable ? <MenuBar value={value} /> : null}
         extensions={extensions}
         immediatelyRender={false}
+        editorProps={{
+          attributes: { class: "overflow-auto bg-white" },
+        }}
         content={value}
       ></EditorProvider>
     </div>

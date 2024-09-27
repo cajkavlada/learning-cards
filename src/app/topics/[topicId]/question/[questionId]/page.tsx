@@ -11,7 +11,7 @@ export default async function QuestionDetailPage({
   if (!question) return null;
 
   return (
-    <div className="w-full p-4">
+    <div className="flex min-h-0 flex-col bg-white p-6 shadow-md md:rounded-lg">
       <FormHeader>Update question</FormHeader>
       <QuestionForm question={question} />
     </div>

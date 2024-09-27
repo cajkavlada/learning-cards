@@ -12,7 +12,7 @@ export function PageHeader({
 } & HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("mb-4 w-full px-4", className)}>
-      <div className="flex w-full justify-between gap-4">
+      <div className="flex w-full flex-wrap justify-between gap-4">
         <h1 className="flex-grow truncate text-wrap text-3xl font-bold">
           {title}
         </h1>

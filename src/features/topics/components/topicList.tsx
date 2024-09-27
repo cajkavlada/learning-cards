@@ -26,7 +26,7 @@ export function TopicList({
 
   return (
     <>
-      <div className="flex h-8 items-center gap-2 px-4">
+      <div className="flex h-8 items-center gap-2 px-4 pb-4">
         {topics.length > 0 && (
           <Checkbox checked={allSelected} onCheckedChange={checkAll} />
         )}
@@ -37,7 +37,7 @@ export function TopicList({
           </>
         )}
       </div>
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4 px-4 py-4">
+      <ul className="grid min-h-0 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4 overflow-auto px-4 py-4">
         {topics.map((topic) => (
           <li
             key={topic.id}

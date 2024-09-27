@@ -65,7 +65,7 @@
   }
 }
 
-p:empty {
-  display: block;
-  min-height: 1em; /* Or any value that makes sense for a "line" */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00000040 #00000000;
 }

@@ -27,6 +27,7 @@ import { DeleteQuestionsDialog } from "./deleteQuestionsDialog";
 import { switchLearnedStatus } from "../actions";
 import { useServerAction } from "zsa-react";
 import { Editor } from "~/components/ui/wysiwyg/Editor";
+import { useMemo } from "react";
 
 export function QuestionList({ questions }: { questions: QuestionProps[] }) {
   const pathname = usePathname();
@@ -35,9 +36,12 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
     useSelectInList(questions);
 
   const { execute: switchLearned } = useServerAction(switchLearnedStatus);
-
+  const learnedCount = useMemo(
+    () => questions.filter((q) => q.markedAsLearned).length,
+    [questions],
+  );
   return (
-    <Card className="mx-4">
+    <Card className="mx-4 flex min-h-0 flex-col">
       <CardHeader>
         <div className="flex h-8 items-center gap-2">
           {questions.length > 0 && (
@@ -51,15 +55,6 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {" "}
-                <DropdownMenuItem
-                  className="text-red-500"
-                  onClick={() =>
-                    openDialog(<DeleteQuestionsDialog ids={selectedItems} />)
-                  }
-                >
-                  Delete selected
-                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={async () => {
                     await switchLearned({
@@ -82,13 +77,24 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
                 >
                   Mark as unlearned
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-red-500"
+                  onClick={() =>
+                    openDialog(<DeleteQuestionsDialog ids={selectedItems} />)
+                  }
+                >
+                  Delete selected
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          <CardTitle>Questions</CardTitle>
+          <CardTitle>
+            Questions (<span className="text-green-500">{learnedCount}</span>/
+            {questions.length})
+          </CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-auto">
         <Accordion type="single" collapsible className="w-full">
           <ul>
             {questions.map((question) => (

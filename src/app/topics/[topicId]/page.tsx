@@ -16,9 +16,9 @@ export default async function TopicPage({
   if (!topic) return null;
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="rounded-lg bg-white p-6 shadow-md">
-        <PageHeader title={topic.name} description={topic.description}>
+    <div className="flex min-h-0 flex-col bg-white pb-6 shadow-md md:rounded-lg md:p-6">
+      <PageHeader title={topic.name} description={topic.description}>
+        <div className="ml-auto flex gap-4">
           <Button asChild variant="outline" className="min-w-9 p-0">
             <Link href={`/topics/${topicId}/edit`}>
               <Pencil size={16} />
@@ -30,9 +30,9 @@ export default async function TopicPage({
             </Link>
           </Button>
           <StartQuizButton topicIds={[topicId]} />
-        </PageHeader>
-        <QuestionList questions={topic.questions} />
-      </div>
+        </div>
+      </PageHeader>
+      <QuestionList questions={topic.questions} />
     </div>
   );
 }

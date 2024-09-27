@@ -30,18 +30,10 @@ export function QuestionAnswer({
 
   return (
     <>
-      {showAnswer && <Editor value={question.answer} editable={false} />}
-      <div className="flex w-full gap-4">
-        {!isFirst && (
-          <LoadingButton
-            onClick={handlePreviousQuestion}
-            loading={previousPending}
-            variant="outline"
-          >
-            Previous Question
-          </LoadingButton>
-        )}
-        <LearnToggle markedAsLearned={question.markedAsLearned} />
+      <div className="flex-1 overflow-auto">
+        {showAnswer && <Editor value={question.answer} editable={false} />}
+      </div>
+      <div className="flex w-full flex-row-reverse flex-wrap-reverse gap-4">
         {!showAnswer && (
           <Button onClick={() => setShowAnswer(!showAnswer)}>
             Reveal Answer
@@ -57,6 +49,16 @@ export function QuestionAnswer({
             Restart Quiz
           </LoadingButton>
         )}
+        {!isFirst && (
+          <LoadingButton
+            onClick={handlePreviousQuestion}
+            loading={previousPending}
+            variant="outline"
+          >
+            Previous Question
+          </LoadingButton>
+        )}
+        <LearnToggle markedAsLearned={question.markedAsLearned} />
       </div>
     </>
   );

@@ -16,9 +16,9 @@ export default async function QuizPage() {
               Question {index + 1}/{total}
             </h2>
           </div>
-          <h2 className="text-center text-gray-800">
+          <h1 className="text-center text-2xl text-gray-800 md:text-4xl">
             {currentQuestion.question}
-          </h2>
+          </h1>
         </div>
         <QuestionAnswer
           question={currentQuestion}

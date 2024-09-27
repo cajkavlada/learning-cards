@@ -1,5 +1,7 @@
-import { useCurrentEditor } from "@tiptap/react";
+import { type Editor, useCurrentEditor } from "@tiptap/react";
 import {
+  AArrowDown,
+  AArrowUp,
   Bold,
   Italic,
   List,
@@ -61,6 +63,18 @@ export function MenuBar({ value }: { value: string }) {
           <Strikethrough size={16} />
         </EditorButton>
         <EditorButton
+          onClick={() => handleEnlargeText(editor)}
+          disabled={editor.isActive("heading", { level: 1 })}
+        >
+          <AArrowUp size={16} />
+        </EditorButton>
+        <EditorButton
+          onClick={() => handleReduceText(editor)}
+          disabled={editor.isActive("paragraph")}
+        >
+          <AArrowDown size={16} />
+        </EditorButton>
+        <EditorButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           isActive={editor.isActive("bulletList")}
         >
@@ -83,4 +97,36 @@ export function MenuBar({ value }: { value: string }) {
       </div>
     </div>
   );
+
+  type Level = 1 | 2 | 3 | 4 | 5 | 6;
+
+  type HeadingLevel = {
+    level: Level;
+  };
+
+  function handleEnlargeText(editor: Editor) {
+    const heading = editor.getAttributes("heading") as HeadingLevel;
+    if (!heading.level) {
+      editor.chain().focus().toggleHeading({ level: 6 }).run();
+    } else {
+      editor
+        .chain()
+        .focus()
+        .toggleHeading({ level: (heading.level - 1) as Level })
+        .run();
+    }
+  }
+
+  function handleReduceText(editor: Editor) {
+    const heading = editor.getAttributes("heading") as HeadingLevel;
+    if (heading.level === 6) {
+      editor.chain().focus().setParagraph().run();
+    } else {
+      editor
+        .chain()
+        .focus()
+        .toggleHeading({ level: (heading.level + 1) as Level })
+        .run();
+    }
+  }
 }

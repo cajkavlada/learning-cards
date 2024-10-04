@@ -4,12 +4,14 @@ import { Label, Switch } from "~/components/ui";
 import { switchLearned } from "../actions";
 import type { QuestionProps } from "~/features/questions/types";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export function LearnToggle({
   markedAsLearned,
 }: {
   markedAsLearned: QuestionProps["markedAsLearned"];
 }) {
+  const t = useTranslations("quiz.progress");
   const [learned, setLearned] = useState(markedAsLearned);
 
   const { execute: toggleLearned } = useServerAction(switchLearned);
@@ -25,7 +27,7 @@ export function LearnToggle({
         onCheckedChange={handleChangeLearned}
         id="marked-as-learned"
       />
-      <Label htmlFor="marked-as-learned">Mark as learned</Label>
+      <Label htmlFor="marked-as-learned">{t("markAsLearned")}</Label>
     </div>
   );
 

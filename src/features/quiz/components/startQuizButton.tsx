@@ -9,6 +9,7 @@ import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import type { TopicProps } from "~/features/topics/types";
 import type { QuestionProps } from "~/features/questions/types";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 export function StartQuizButton({
   topicIds,
@@ -18,6 +19,7 @@ export function StartQuizButton({
   questions?: QuestionProps[];
 }) {
   const router = useRouter();
+  const t = useTranslations("quiz");
   const { openDialog } = useDialog();
 
   const quizDisabled = useMemo(() => {
@@ -31,7 +33,7 @@ export function StartQuizButton({
 
   return (
     <Button disabled={quizDisabled} onClick={startQuiz}>
-      Start Quiz
+      {t("start")}
     </Button>
   );
 
@@ -43,20 +45,20 @@ export function StartQuizButton({
 }
 
 function ConflictDialog({ topicIds }: { topicIds: TopicProps["id"][] }) {
+  const t = useTranslations("quiz.conflictDialog");
   const router = useRouter();
   const { closeDialog } = useDialog();
   const { execute: startNewQuiz } = useServerAction(startNewQuizSession);
 
   return (
     <DialogLayout
-      title="Start new quiz"
-      submitLabel="Start new quiz"
+      title={t("title")}
+      submitLabel={t("override")}
       onSubmit={confirmNewQuiz}
-      cancelLabel="Proceed with current quiz"
+      cancelLabel={t("continue")}
       onCancel={() => router.push("/quiz")}
     >
-      You have another quiz in progress. Starting a new quiz will end the
-      current one.
+      {t("description")}
     </DialogLayout>
   );
 

@@ -14,7 +14,9 @@
 - [x] Mark/Unmark as learned logic (TestView[only Mark] and ListView)
 - [x] Responsiveness
 - [-] Main page // still work to be done
-- [ ] Protected routes
+- [x] Protected routes
+- [x] Prod auth
+- [x] Localization
 - [ ] Dark theme
 - [ ] Analytics
 - [ ] Postlimiting

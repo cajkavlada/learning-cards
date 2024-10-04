@@ -6,23 +6,52 @@ import { deleteQuestions } from "../actions";
 import type { QuestionProps } from "../types";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import { useDialog } from "~/components/layout/dialog/useDialog";
+import { Button } from "~/components/ui";
+import { Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+export function DeleteQuestionsButton({
+  ids,
+}: {
+  ids: Set<QuestionProps["id"]>;
+}) {
+  const { openDialog } = useDialog();
+
+  return (
+    <>
+      <div onClick={(e) => e.stopPropagation()}>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            openDialog(<DeleteQuestionsDialog ids={ids} />);
+          }}
+          className="h-8 w-8 rounded-full p-0"
+          variant="ghost"
+        >
+          <Trash2 size={16} />
+        </Button>
+      </div>
+    </>
+  );
+}
 
 export function DeleteQuestionsDialog({
   ids,
 }: {
   ids: Set<QuestionProps["id"]>;
 }) {
-  const { isPending, execute } = useServerAction(deleteQuestions);
   const { closeDialog } = useDialog();
+  const t = useTranslations("question.delete");
+  const { isPending, execute } = useServerAction(deleteQuestions);
 
   return (
     <DialogLayout
-      title="Delete question"
-      submitLabel="Delete"
+      title={t("title", { count: ids.size })}
+      submitLabel={t("confirm")}
       submitLoading={isPending}
       onSubmit={onSubmit}
     >
-      Are you sure, you want to delete selected question(s).
+      {t("description", { count: ids.size })}
     </DialogLayout>
   );
 
@@ -30,7 +59,7 @@ export function DeleteQuestionsDialog({
     const [data, error] = await execute(Array.from(ids));
 
     if (data) {
-      toast("Question(s) deleted!");
+      toast(t("success", { count: ids.size }));
       closeDialog();
     }
     if (error) {

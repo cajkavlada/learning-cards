@@ -7,18 +7,20 @@ import {
   useAuth,
   UserButton,
 } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/topics", label: "Topics", auth: true },
-];
-
 export function Navbar() {
   const pathname = usePathname();
   const { userId } = useAuth();
+  const t = useTranslations("navbar");
+
+  const links = [
+    { href: "/", label: t("home") },
+    { href: "/topics", label: t("topics"), auth: true },
+  ];
   return (
     <>
       {links.map(({ href, label, auth }) => {

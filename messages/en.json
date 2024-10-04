@@ -1,0 +1,107 @@
+{
+  "error": {
+    "tryAgain": "Try again"
+  },
+  "navbar": {
+    "home": "Home",
+    "topics": "Topics"
+  },
+  "home": {
+    "title": "Learning cards",
+    "description": "Learning app for testing your knowledge.",
+    "list": {
+      "1": "Organize your questions and answers into topics and start learning easily.",
+      "2": "Master Your Knowledge, One Question at a Time.",
+      "3": "Test, Learn — Your Knowledge Journey Starts Here."
+    },
+    "goToTopics": "Go to topics"
+  },
+  "topic": {
+    "list": {
+      "title": "Topics",
+      "create": "Create a new topic",
+      "noTopics": "No topics found"
+    },
+    "card": {
+      "questionCount": "{count, plural, =1 {# question} other {# questions}}"
+    },
+    "form": {
+      "create": {
+        "title": "Create topic",
+        "confirm": "Create",
+        "success": "Topic created successfully"
+      },
+      "edit": {
+        "title": "Edit topic",
+        "confirm": "Save",
+        "success": "Topic updated successfully"
+      },
+      "inputs": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "delete": {
+      "title": "Delete {count, plural, =1 {topic} other {topics}}",
+      "description": "This will delete {count, plural, =1 {topic and all its} other {selected topics all their}} questions.",
+      "confirm": "Delete",
+      "success": "{count, plural, =1 {Topic} other {Topics}} deleted successfully"
+    }
+  },
+  "question": {
+    "list": {
+      "create": "Add question",
+      "title": "Questions",
+      "markAsLearned": "Mark as learned",
+      "markAsNotLearned": "Mark as not learned",
+      "delete": "Delete selected",
+      "noQuestions": "No questions found"
+    },
+    "row": {
+      "learned": "Learned"
+    },
+    "form": {
+      "create": {
+        "title": "Create question",
+        "another": "Create another",
+        "confirm": "Create",
+        "success": "Question created successfully"
+      },
+      "edit": {
+        "title": "Edit question",
+        "confirm": "Save",
+        "success": "Question updated successfully"
+      },
+      "inputs": {
+        "question": "Question",
+        "answer": "Answer"
+      }
+    },
+    "delete": {
+      "title": "Delete {count, plural, =1 {question} other {questions}}",
+      "description": "Are you sure, you want to delete {count, plural, =1 {the question} other {selected questions}}?",
+      "confirm": "Delete",
+      "success": "{count, plural, =1 {Question} other {Questions}} deleted successfully"
+    }
+  },
+  "quiz": {
+    "start": "Start a test",
+    "conflictDialog": {
+      "title": "Another test in progress",
+      "description": "You have another test in progress. Starting a new test will end the current one.",
+      "continue": "Continue with test in progress",
+      "override": "Start selected test"
+    },
+    "progress": {
+      "title": "Question",
+      "reveal": "Reveal answer",
+      "next": "Next question",
+      "previous": "Previous question",
+      "restart": "Restart test",
+      "markAsLearned": "Mark as learned"
+    }
+  },
+  "confirmDialog": {
+    "confirm": "Confirm"
+  }
+}

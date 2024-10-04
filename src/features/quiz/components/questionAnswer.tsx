@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { LoadingButton } from "~/components/form";
 import { LearnToggle } from "./learnToggle";
 import { Editor } from "~/components/ui/wysiwyg/Editor";
+import { useTranslations } from "next-intl";
 
 export function QuestionAnswer({
   question,
@@ -19,6 +20,7 @@ export function QuestionAnswer({
   isFirst: boolean;
   isLast: boolean;
 }) {
+  const t = useTranslations("quiz.progress");
   const [showAnswer, setShowAnswer] = useState(false);
 
   const { isPending: nextPending, execute: moveNext } =
@@ -36,17 +38,17 @@ export function QuestionAnswer({
       <div className="flex w-full flex-row-reverse flex-wrap-reverse gap-4">
         {!showAnswer && (
           <Button onClick={() => setShowAnswer(!showAnswer)}>
-            Reveal Answer
+            {t("reveal")}
           </Button>
         )}
         {!isLast && showAnswer && (
           <LoadingButton onClick={handleNextQuestion} loading={nextPending}>
-            Next Question
+            {t("next")}
           </LoadingButton>
         )}
         {isLast && showAnswer && (
           <LoadingButton onClick={handleRestartQuiz} loading={restartPending}>
-            Restart Quiz
+            {t("restart")}
           </LoadingButton>
         )}
         {!isFirst && (
@@ -55,7 +57,7 @@ export function QuestionAnswer({
             loading={previousPending}
             variant="outline"
           >
-            Previous Question
+            {t("previous")}
           </LoadingButton>
         )}
         <LearnToggle markedAsLearned={question.markedAsLearned} />

@@ -41,7 +41,7 @@ export function DialogLayout({
         )}
       </DialogHeader>
       {children}
-      <DialogFooter className="mt-8 p-2 sm:justify-between">
+      <DialogFooter className="mt-8 py-2 sm:justify-between">
         {cancelLabel && (
           <Button
             variant="ghost"

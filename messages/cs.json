@@ -1,0 +1,107 @@
+{
+  "error": {
+    "tryAgain": "Zkusit znovu"
+  },
+  "navbar": {
+    "home": "Domů",
+    "topics": "Témata"
+  },
+  "home": {
+    "title": "Šprtací kartičky",
+    "description": "Aplikace pro testování vašich znalostí.",
+    "list": {
+      "1": "Organizujte své otázky a odpovědi do témat a začněte se snadno učit.",
+      "2": "Ovládněte své znalosti, jednou otázkou za druhou.",
+      "3": "Testujte, učte se — cesta za znalostmi začíná zde."
+    },
+    "goToTopics": "Přejít na témata"
+  },
+  "topic": {
+    "list": {
+      "title": "Témata",
+      "create": "Vytvořit nové téma",
+      "noTopics": "Nemáte žádná témata"
+    },
+    "card": {
+      "questionCount": "{count, plural, =0 {Žádné otázky} =1 {# otázka} few {# otázky} other {# otázek} }"
+    },
+    "form": {
+      "create": {
+        "title": "Vytvořit téma",
+        "confirm": "Vytvořit",
+        "success": "Téma bylo úspěšně vytvořeno"
+      },
+      "edit": {
+        "title": "Upravit téma",
+        "confirm": "Uložit",
+        "success": "Téma bylo úspěšně upraveno"
+      },
+      "inputs": {
+        "name": "Název",
+        "description": "Popis"
+      }
+    },
+    "delete": {
+      "title": "Smazat {count, plural, =1 {téma} other {témata}}",
+      "description": "Tímto smažete {count, plural, =1 {téma a všechny jeho} other {vybraná témata a všechny jejich}} otázky.",
+      "confirm": "Smazat",
+      "success": "{count, plural, =1 {Téma bylo úspěšně smazáno} other {Témata byla úspěšně smazána}}"
+    }
+  },
+  "question": {
+    "list": {
+      "create": "Přidat otázku",
+      "title": "Otázky",
+      "markAsLearned": "Označit jako naučené",
+      "markAsNotLearned": "Označit jako nenaučené",
+      "delete": "Smazat vybrané",
+      "noQuestions": "Nemáte žádné otázky"
+    },
+    "row": {
+      "learned": "Naučené"
+    },
+    "form": {
+      "create": {
+        "title": "Vytvořit otázku",
+        "another": "Vytvořit další",
+        "confirm": "Vytvořit",
+        "success": "Otázka byla úspěšně vytvořena"
+      },
+      "edit": {
+        "title": "Upravit otázku",
+        "confirm": "Uložit",
+        "success": "Otázka byla úspěšně upravena"
+      },
+      "inputs": {
+        "question": "Otázka",
+        "answer": "Odpověď"
+      }
+    },
+    "delete": {
+      "title": "Smazat {count, plural, =1 {otázku} other {otázky}}",
+      "description": "Jste si jisti, že chcete smazat {count, plural, =1 {tuto otázku} other {vybrané otázky}}?",
+      "confirm": "Smazat",
+      "success": "{count, plural, =1 {Otázka byla úspěšně smazána} other {Otázky byly úspěšně smazány}}"
+    }
+  },
+  "quiz": {
+    "start": "Spustit test",
+    "conflictDialog": {
+      "title": "Nedokončený test v průběhu",
+      "description": "Máte jiný test v průběhu. Spuštění nového ukončí současný.",
+      "continue": "Pokračovat v nedokončeném testu",
+      "override": "Spustit vybraný test"
+    },
+    "progress": {
+      "title": "Otázka",
+      "reveal": "Zobrazit odpověď",
+      "next": "Další otázka",
+      "previous": "Předchozí otázka",
+      "restart": "Restartovat test",
+      "markAsLearned": "Označit jako naučené"
+    }
+  },
+  "confirmDialog": {
+    "confirm": "Potvrdit"
+  }
+}

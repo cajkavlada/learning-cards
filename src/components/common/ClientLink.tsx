@@ -18,7 +18,7 @@ export function ClientLink({
           e.preventDefault();
           router.push(href);
         }}
-        className="relative h-8 w-8 -translate-y-4 translate-x-4 rounded-full p-0"
+        className="h-8 w-8 rounded-full p-0"
         variant="ghost"
       />
     </div>

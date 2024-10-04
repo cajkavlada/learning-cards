@@ -16,10 +16,12 @@ import {
 } from "~/features/questions/types";
 import type { TopicProps } from "~/features/topics/types";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export function QuestionForm({ question }: { question?: QuestionProps }) {
   const router = useRouter();
   const { topicId } = useParams();
+  const t = useTranslations("question.form");
 
   const [createAnother, setCreateAnother] = useState(false);
 
@@ -43,11 +45,15 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       className="flex min-h-0 w-full flex-1 flex-col px-6"
     >
       <div className="flex min-h-0 flex-col gap-4 py-4">
-        <FormInput name="question" control={form.control} label="Question" />
+        <FormInput
+          name="question"
+          control={form.control}
+          label={t("inputs.question")}
+        />
         <FormEditor
           name="answer"
           control={form.control}
-          label="Answer"
+          label={t("inputs.answer")}
           className="flex min-h-0 flex-col"
         />
       </div>
@@ -59,14 +65,16 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
               checked={createAnother}
               onCheckedChange={(checked) => setCreateAnother(checked === true)}
             />
-            <Label htmlFor="create-another-checkbox">Create another</Label>
+            <Label htmlFor="create-another-checkbox">
+              {t("create.another")}
+            </Label>
           </div>
         )}
         <LoadingButton
           loading={createIsPending || updateIsPending}
           type="submit"
         >
-          {question ? "Update" : "Create"}
+          {question ? t("edit.confirm") : t("create.confirm")}
         </LoadingButton>
       </div>
     </Form>
@@ -79,7 +87,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       topicId: topicId as TopicProps["id"],
     });
     if (data) {
-      toast("Question created!");
+      toast(t("create.success"));
       if (createAnother) {
         form.setFocus("question");
         form.reset();
@@ -99,7 +107,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       id: question.id,
     });
     if (data) {
-      toast("Question updated!");
+      toast(t("edit.success"));
       router.back();
     }
     if (error) {

@@ -13,7 +13,7 @@ export function TopicList({
 }: {
   topics: TopicPropsWithQuestionCount[];
 }) {
-  const t = useTranslations("topic.listPage");
+  const t = useTranslations("topic.list");
   const { checkItem, checkAll, selectedItems, allSelected } =
     useSelectInList(topics);
   return (

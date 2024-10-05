@@ -2,7 +2,7 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { NextIntlClientProvider } from "next-intl";
-
+import { csCZ } from "@clerk/localizations";
 import { Navbar } from "../../components/layout/navbar";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui";
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   const messages = await getMessages();
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={csCZ}>
       <NextIntlClientProvider messages={messages}>
         <TooltipProvider>
           <DialogProvider>

@@ -8,8 +8,11 @@ importers:
 
   .:
     dependencies:
+      '@clerk/localizations':
+        specifier: ^3.1.2
+        version: 3.1.2
       '@clerk/nextjs':
-        specifier: ^5.3.7
+        specifier: ^5.7.1
         version: 5.7.1(next@14.2.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.4))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.9.0
@@ -207,6 +210,10 @@ packages:
     peerDependencies:
       react: '>=18 || >=19.0.0-beta'
       react-dom: '>=18 || >=19.0.0-beta'
+
+  '@clerk/localizations@3.1.2':
+    resolution: {integrity: sha512-+FQqs83mUbLthb66zM8rmbp5LgkpTaVzN21EvkCcX8wAUJ7oT3W9sFSyUwQZXErwQpQNZRlv92nPPwxNsQZ7Mw==}
+    engines: {node: '>=18.17.0'}
 
   '@clerk/nextjs@5.7.1':
     resolution: {integrity: sha512-UqgW8iy6oXg3M/U7lE6V3sBlb5akF2HLanziOIY8YGL0DvJEG0MWb6KWAzaeezqeL0drdY63QfEAiYZZx3iq8w==}
@@ -3252,6 +3259,10 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       tslib: 2.4.1
+
+  '@clerk/localizations@3.1.2':
+    dependencies:
+      '@clerk/types': 4.25.0
 
   '@clerk/nextjs@5.7.1(next@14.2.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.4))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

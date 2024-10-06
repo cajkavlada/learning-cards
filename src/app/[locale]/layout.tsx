@@ -2,13 +2,14 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { NextIntlClientProvider } from "next-intl";
-import { csCZ } from "@clerk/localizations";
+
 import { Navbar } from "../../components/layout/navbar";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { DialogProvider } from "~/components/layout/dialog/dialogProvider";
 import { getMessages } from "next-intl/server";
+import { clerkLocalizations, type Locale } from "~/utils/clerkLocalizations";
 
 export const metadata: Metadata = {
   title: "Learning cards",
@@ -23,11 +24,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
-  params: { locale: string };
+  params: { locale: Locale };
 }>) {
   const messages = await getMessages();
+  const clerkLocalization = clerkLocalizations[locale] || clerkLocalizations.en;
+
   return (
-    <ClerkProvider localization={csCZ}>
+    <ClerkProvider localization={clerkLocalization}>
       <NextIntlClientProvider messages={messages}>
         <TooltipProvider>
           <DialogProvider>

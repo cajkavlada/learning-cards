@@ -12,6 +12,7 @@ export function EditorButton({
     <Button
       className={cn("h-8 w-8 p-0", className)}
       variant={isActive ? "default" : "outline"}
+      tabIndex={-1}
       type="button"
       {...props}
     />

@@ -65,6 +65,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
               id="create-another-checkbox"
               checked={createAnother}
               onCheckedChange={(checked) => setCreateAnother(checked === true)}
+              tabIndex={-1}
             />
             <Label htmlFor="create-another-checkbox">
               {t("create.another")}

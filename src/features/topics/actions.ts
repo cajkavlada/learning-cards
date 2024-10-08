@@ -17,6 +17,7 @@ import {
   deleteTopicsSchema,
   type TopicProps,
 } from "./types";
+import { getTranslations } from "next-intl/server";
 
 export async function getMyTopics() {
   const user = auth();
@@ -33,7 +34,10 @@ export async function getTopicDetail(id: TopicProps["id"]) {
 }
 
 export const createTopic = createServerAction()
-  .input(createTopicSchema)
+  .input(async () => {
+    const t = await getTranslations("topic.form");
+    return createTopicSchema(t);
+  })
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
@@ -47,7 +51,10 @@ export const createTopic = createServerAction()
   });
 
 export const updateTopic = createServerAction()
-  .input(updateTopicSchema)
+  .input(async () => {
+    const t = await getTranslations("topic.form");
+    return updateTopicSchema(t);
+  })
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");

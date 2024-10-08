@@ -14,6 +14,7 @@ import {
 import { Form, FormInput, LoadingButton } from "~/components/form";
 import { createTopic, updateTopic } from "~/features/topics/actions";
 import { useTranslations } from "next-intl";
+import { formatZsaError } from "~/utils/formatZSAError";
 
 export function TopicForm({ topic }: { topic?: TopicProps }) {
   const router = useRouter();
@@ -25,7 +26,7 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
     useServerAction(updateTopic);
 
   const form = useForm<TopicFormProps>({
-    resolver: zodResolver(topicFormSchema),
+    resolver: zodResolver(topicFormSchema(t)),
     defaultValues: {
       name: topic?.name ?? "",
       description: topic?.description ?? "",
@@ -42,7 +43,7 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
         <FormInput
           name="name"
           control={form.control}
-          label={t("inputs.name")}
+          label={t("inputs.name.label")}
         />
         <FormInput
           name="description"
@@ -75,7 +76,7 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
       router.back();
     }
     if (error) {
-      toast(error.name, { description: error.message });
+      toast(error.name, { description: formatZsaError(error) });
     }
   }
 }

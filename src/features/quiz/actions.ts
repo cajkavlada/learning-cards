@@ -15,7 +15,7 @@ import {
   getUnlearnedQuestionsIdsFromTopicsQuery,
   updateQuestionMutation,
 } from "../questions/queries";
-import { updateTopicSchema, type TopicProps } from "../topics/types";
+import { baseTopicSchema, type TopicProps } from "../topics/types";
 import { createServerAction } from "zsa";
 import { revalidatePath } from "next/cache";
 import { shuffleArray } from "~/utils/shuffle";
@@ -50,7 +50,7 @@ export async function getCurrentQuestionInfo() {
 }
 
 export const checkQuizSessionConflict = createServerAction()
-  .input(updateTopicSchema.shape.id.array())
+  .input(baseTopicSchema.required().shape.id.array())
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
@@ -68,7 +68,7 @@ function arrayItemsAreEqual(arr1: string[], arr2: string[]) {
 }
 
 export const startNewQuizSession = createServerAction()
-  .input(updateTopicSchema.shape.id.array())
+  .input(baseTopicSchema.required().shape.id.array())
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");

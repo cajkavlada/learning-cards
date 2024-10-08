@@ -37,7 +37,10 @@
         "success": "Topic updated successfully"
       },
       "inputs": {
-        "name": "Name",
+        "name": {
+          "label": "Name",
+          "lengthError": "Name is required"
+        },
         "description": "Description"
       }
     },
@@ -73,8 +76,14 @@
         "success": "Question updated successfully"
       },
       "inputs": {
-        "question": "Question",
-        "answer": "Answer"
+        "question": {
+          "label": "Question",
+          "lengthError": "Question is required"
+        },
+        "answer": {
+          "label": "Answer",
+          "lengthError": "Answer is required"
+        }
       }
     },
     "delete": {

@@ -17,6 +17,7 @@ import {
 import type { TopicProps } from "~/features/topics/types";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { formatZsaError } from "~/utils/formatZSAError";
 
 export function QuestionForm({ question }: { question?: QuestionProps }) {
   const router = useRouter();
@@ -31,7 +32,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
     useServerAction(updateQuestion);
 
   const form = useForm<QuestionFormProps>({
-    resolver: zodResolver(questionFormSchema),
+    resolver: zodResolver(questionFormSchema(t)),
     defaultValues: {
       question: question?.question ?? "",
       answer: question?.answer ?? "",
@@ -48,12 +49,12 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
         <FormInput
           name="question"
           control={form.control}
-          label={t("inputs.question")}
+          label={t("inputs.question.label")}
         />
         <FormEditor
           name="answer"
           control={form.control}
-          label={t("inputs.answer")}
+          label={t("inputs.answer.label")}
           className="flex min-h-0 flex-col"
         />
       </div>
@@ -96,7 +97,7 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       }
     }
     if (error) {
-      toast(error.name, { description: error.message });
+      toast(error.name, { description: formatZsaError(error) });
     }
   }
 

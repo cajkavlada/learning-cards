@@ -37,7 +37,10 @@
         "success": "Téma bylo úspěšně upraveno"
       },
       "inputs": {
-        "name": "Název",
+        "name": {
+          "label": "Název",
+          "lengthError": "Název je povinný"
+        },
         "description": "Popis"
       }
     },
@@ -73,8 +76,14 @@
         "success": "Otázka byla úspěšně upravena"
       },
       "inputs": {
-        "question": "Otázka",
-        "answer": "Odpověď"
+        "question": {
+          "label": "Otázka",
+          "lengthError": "Otázka je povinná"
+        },
+        "answer": {
+          "label": "Odpověď",
+          "lengthError": "Odpověď je povinná"
+        }
       }
     },
     "delete": {

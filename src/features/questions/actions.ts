@@ -17,6 +17,7 @@ import {
   updateQuestionLearnedStatusSchema,
 } from "./types";
 import { auth } from "@clerk/nextjs/server";
+import { getTranslations } from "next-intl/server";
 
 export async function getQuestionDetail(id: QuestionProps["id"]) {
   const user = auth();
@@ -34,7 +35,10 @@ export async function getQuestionDetail(id: QuestionProps["id"]) {
   return question;
 }
 export const createQuestion = createServerAction()
-  .input(createQuestionSchema)
+  .input(async () => {
+    const t = await getTranslations("question.form");
+    return createQuestionSchema(t);
+  })
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
@@ -48,7 +52,10 @@ export const createQuestion = createServerAction()
   });
 
 export const updateQuestion = createServerAction()
-  .input(updateQuestionSchema)
+  .input(async () => {
+    const t = await getTranslations("question.form");
+    return updateQuestionSchema(t);
+  })
   .handler(async ({ input }) => {
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");

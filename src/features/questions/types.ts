@@ -3,27 +3,46 @@ import { questions } from "~/server/db/schema";
 import type { InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 import type { TopicProps } from "../topics/types";
+import type { TFunction } from "~/types/common";
 
 export type QuestionProps = InferSelectModel<typeof questions>;
 
-export const baseQuestionSchema = createInsertSchema(questions, {
-  question: (schema) => schema.question.min(1, "Question is required"),
-  answer: (schema) => schema.answer.min(1, "Answer is required"),
-});
+export const baseQuestionSchema = createInsertSchema(questions);
 
-export const questionFormSchema = baseQuestionSchema
-  .partial({ topicId: true })
-  .omit({ id: true });
-export type QuestionFormProps = z.infer<typeof questionFormSchema>;
+export const questionFormSchema = (t: TFunction) =>
+  baseQuestionSchema
+    .partial({ topicId: true })
+    .omit({ id: true })
+    .extend({
+      question: baseQuestionSchema.shape.question.min(
+        1,
+        t("inputs.question.lengthError"),
+      ),
+      answer: baseQuestionSchema.shape.answer
+        .min(1, t("inputs.answer.lengthError"))
+        .refine(
+          (value) => value.trim() !== "<p></p>",
+          t("inputs.answer.lengthError"),
+        ),
+    });
+export type QuestionFormProps = z.infer<ReturnType<typeof questionFormSchema>>;
 
-export const createQuestionSchema = baseQuestionSchema.omit({ id: true });
-export type CreateQuestionProps = z.infer<typeof createQuestionSchema> &
+export const createQuestionSchema = (t: TFunction) =>
+  questionFormSchema(t).required({ topicId: true });
+
+export type CreateQuestionProps = z.infer<
+  ReturnType<typeof createQuestionSchema>
+> &
   Pick<TopicProps, "userId">;
 
-export const updateQuestionSchema = baseQuestionSchema
-  .partial()
-  .required({ id: true });
-export type UpdateQuestionProps = z.infer<typeof updateQuestionSchema> &
+export const updateQuestionSchema = (t: TFunction) =>
+  questionFormSchema(t)
+    .partial()
+    .extend({ id: baseQuestionSchema.required().shape.id });
+
+export type UpdateQuestionProps = z.infer<
+  ReturnType<typeof updateQuestionSchema>
+> &
   Pick<TopicProps, "userId">;
 
 export const deleteQuestionsSchema = baseQuestionSchema
@@ -34,10 +53,10 @@ export type DeleteQuestionsProps = {
   deleteIds: z.infer<typeof deleteQuestionsSchema>;
 };
 
-export const updateQuestionLearnedStatusSchema = updateQuestionSchema
+export const updateQuestionLearnedStatusSchema = baseQuestionSchema
   .pick({ markedAsLearned: true })
   .required()
-  .extend({ ids: updateQuestionSchema.shape.id.array() });
+  .extend({ ids: baseQuestionSchema.required().shape.id.array() });
 
 export type UpdateQuestionLearnedStatusProps = z.infer<
   typeof updateQuestionLearnedStatusSchema

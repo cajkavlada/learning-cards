@@ -9,24 +9,30 @@ export function ColorPicker({
   onChange: (color: string) => void;
 }) {
   const colors = [
-    "#f44336",
-    "#e91e63",
-    "#9c27b0",
-    "#673ab7",
-    "#3f51b5",
-    "#2196f3",
-    "#03a9f4",
-    "#00bcd4",
-    "#009688",
-    "#4caf50",
-    "#8bc34a",
-    "#cddc39",
-    "#ffeb3b",
-    "#ffc107",
-    "#ff9800",
-    "#ff5722",
-    "#795548",
-    "#607d8b",
+    "#f44336", // Red
+    "#e91e63", // Pink
+    "#ff00ff", // Magenta
+    "#9c27b0", // Purple
+    "#673ab7", // Deep Purple
+    "#3f51b5", // Indigo
+    "#2196f3", // Blue
+    "#03a9f4", // Light Blue
+    "#00bcd4", // Cyan
+    "#00ffff", // Aqua
+    "#009688", // Teal
+    "#4caf50", // Green
+    "#8bc34a", // Light Green
+    "#cddc39", // Lime
+    "#ffeb3b", // Yellow
+    "#ffff00", // Bright Yellow
+    "#ffc107", // Amber
+    "#ff9800", // Orange
+    "#ff5722", // Deep Orange
+    "#795548", // Brown
+    "#607d8b", // Blue Grey
+    "#808080", // Grey
+    "#000000", // Black
+    "#ffffff", // White
   ];
 
   return (

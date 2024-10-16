@@ -6,13 +6,15 @@ import { routing } from "./i18n/routing";
 
 const handleI18nRouting = createMiddleware(routing);
 
-const isProtectedRoute = createRouteMatcher([
-  "/:locale/topics(.*)",
-  "/:locale/quiz(.*)",
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/:locale",
+  "/:locale/sign-in(.*)",
+  "/:locale/sign-up(.*)",
 ]);
 
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  if (!isPublicRoute(req)) auth().protect();
 
   return handleI18nRouting(req);
 });

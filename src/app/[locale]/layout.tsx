@@ -2,6 +2,7 @@ import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { NextIntlClientProvider } from "next-intl";
+import { CSPostHogProvider } from "../../analytics/provider";
 
 import { Navbar } from "../../components/layout/navbar";
 import "~/styles/globals.css";
@@ -29,23 +30,25 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider localization={clerkLocalization}>
-      <NextIntlClientProvider messages={messages}>
-        <TooltipProvider>
-          <DialogProvider>
-            <html lang={locale} className={`${GeistSans.variable}`}>
-              <body className="flex h-screen flex-col">
-                <nav className="flex h-16 w-full items-center p-4">
-                  <Navbar />
-                </nav>
-                <main className="flex-1 overflow-auto bg-gray-100">
-                  {children}
-                </main>
-                <Toaster />
-              </body>
-            </html>
-          </DialogProvider>
-        </TooltipProvider>
-      </NextIntlClientProvider>
+      <CSPostHogProvider>
+        <NextIntlClientProvider messages={messages}>
+          <TooltipProvider>
+            <DialogProvider>
+              <html lang={locale} className={`${GeistSans.variable}`}>
+                <body className="flex h-screen flex-col">
+                  <nav className="flex h-16 w-full items-center p-4">
+                    <Navbar />
+                  </nav>
+                  <main className="flex-1 overflow-auto bg-gray-100">
+                    {children}
+                  </main>
+                  <Toaster />
+                </body>
+              </html>
+            </DialogProvider>
+          </TooltipProvider>
+        </NextIntlClientProvider>
+      </CSPostHogProvider>
     </ClerkProvider>
   );
 }

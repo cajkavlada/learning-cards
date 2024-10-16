@@ -4,7 +4,8 @@
   },
   "navbar": {
     "home": "Home",
-    "topics": "Topics"
+    "topics": "Topics",
+    "signIn": "Sign in"
   },
   "home": {
     "title": "Learning cards",

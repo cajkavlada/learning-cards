@@ -4,7 +4,8 @@
   },
   "navbar": {
     "home": "Domů",
-    "topics": "Témata"
+    "topics": "Témata",
+    "signIn": "Přihlásit se"
   },
   "home": {
     "title": "Šprtací kartičky",

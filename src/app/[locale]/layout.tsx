@@ -19,11 +19,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  modal,
   params: { locale },
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
   params: { locale: Locale };
 }>) {
   const messages = await getMessages();
@@ -39,10 +37,9 @@ export default async function RootLayout({
                 <nav className="flex h-16 w-full items-center p-4">
                   <Navbar />
                 </nav>
-                <main className="flex-1 items-center overflow-auto bg-gray-100">
+                <main className="flex-1 overflow-auto bg-gray-100">
                   {children}
                 </main>
-                {modal}
                 <Toaster />
               </body>
             </html>

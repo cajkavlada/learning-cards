@@ -39,7 +39,7 @@ export function Navbar() {
       })}
       <div className="ml-auto">
         <SignedOut>
-          <SignInButton />
+          <SignInButton>{t("signIn")}</SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton />

@@ -9,8 +9,7 @@ import {
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import type { QuestionProps } from "../types";
 import { CircleCheckBig, Pencil } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { DeleteQuestionsButton } from "./deleteQuestionsDialog";
 import { Editor } from "~/components/ui/wysiwyg/Editor";
 import { useTranslations } from "next-intl";
@@ -25,16 +24,24 @@ export function QuestionRow({
   onCheckedChange: (checked: CheckedState) => void;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("question.row");
   return (
     <li>
       <AccordionItem value={`question-${question.id}`}>
         <div className="flex items-center">
           <div className="flex items-center pr-2">
-            <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+            <Checkbox
+              checked={checked}
+              onCheckedChange={onCheckedChange}
+              aria-labelledby={`checkbox-label-${question.question}`}
+            />
           </div>
           <div className="flex-1 pr-2">
-            <AccordionTrigger className="text-base">
+            <AccordionTrigger
+              className="text-base"
+              id={`checkbox-label-${question.question}`}
+            >
               {question.question}
             </AccordionTrigger>
           </div>
@@ -45,10 +52,13 @@ export function QuestionRow({
           ) : (
             <div className="w-8" />
           )}
-          <Button asChild className="h-8 w-8 rounded-full p-0" variant="ghost">
-            <Link href={`${pathname}/question/${question.id}`}>
-              <Pencil size={16} />
-            </Link>
+          <Button
+            onClick={() => router.push(`${pathname}/question/${question.id}`)}
+            aria-label={t("editLabel")}
+            className="h-8 w-8 rounded-full p-0"
+            variant="ghost"
+          >
+            <Pencil size={16} />
           </Button>
           <DeleteQuestionsButton ids={new Set([question.id])} />
         </div>

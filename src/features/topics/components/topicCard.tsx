@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -6,7 +7,6 @@ import {
   CardTitle,
   Checkbox,
 } from "~/components/ui";
-import { ClientLink } from "~/components/common/ClientLink";
 import { Pencil } from "lucide-react";
 import { DeleteTopicsButton } from "./deleteTopicsDialog";
 import type { TopicPropsWithQuestionCount } from "../types";
@@ -29,6 +29,7 @@ export function TopicCard({
   function handleCardClick() {
     router.push(`/topics/${topic.id}`);
   }
+
   return (
     <li className="min-w-[250px] max-w-[350px] flex-1 flex-grow">
       <Card
@@ -40,14 +41,29 @@ export function TopicCard({
         <CardHeader className="pr-2 pt-3">
           <div className="flex items-center">
             <div className="mr-2 flex" onClick={(e) => e.stopPropagation()}>
-              <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+              <Checkbox
+                checked={checked}
+                onCheckedChange={onCheckedChange}
+                aria-labelledby={`checkbox-label-${topic.name}`}
+              />
             </div>
-            <CardTitle className="flex-1 truncate text-wrap">
+            <CardTitle
+              className="flex-1 truncate text-wrap"
+              id={`checkbox-label-${topic.name}`}
+            >
               {topic.name}
             </CardTitle>
-            <ClientLink href={`topics/${topic.id}/edit`}>
+            <Button
+              className="h-8 w-8 rounded-full p-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`topics/${topic.id}/edit`);
+              }}
+              variant="ghost"
+              aria-label={t("editLabel")}
+            >
               <Pencil size={16} />
-            </ClientLink>
+            </Button>
             <DeleteTopicsButton ids={new Set([topic.id])} />
           </div>
           <CardDescription className="truncate text-wrap">

@@ -40,12 +40,20 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
       <CardHeader className="border-b-2">
         <div className="flex h-8 items-center gap-2">
           {questions.length > 0 && (
-            <Checkbox checked={allSelected} onCheckedChange={checkAll} />
+            <Checkbox
+              checked={allSelected}
+              onCheckedChange={checkAll}
+              aria-label={t("checkAllLabel")}
+            />
           )}
           {selectedItems.size > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="h-8 w-8 rounded-full p-0" variant="ghost">
+                <Button
+                  className="h-8 w-8 rounded-full p-0"
+                  variant="ghost"
+                  aria-label={t("batchActionsLabel")}
+                >
                   <EllipsisVertical className="h-6 w-6 cursor-pointer text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>

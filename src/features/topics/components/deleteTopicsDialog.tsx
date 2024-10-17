@@ -12,19 +12,20 @@ import { useDialog } from "~/components/layout/dialog/useDialog";
 
 export function DeleteTopicsButton({ ids }: { ids: Set<TopicProps["id"]> }) {
   const { openDialog } = useDialog();
+  const t = useTranslations("topic.card");
 
   return (
-    <>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Button
-          onClick={() => openDialog(<DeleteTopicsDialog ids={ids} />)}
-          className="h-8 w-8 rounded-full p-0"
-          variant="destructiveGhost"
-        >
-          <Trash2 size={16} />
-        </Button>
-      </div>
-    </>
+    <Button
+      onClick={(e) => {
+        e.stopPropagation();
+        openDialog(<DeleteTopicsDialog ids={ids} />);
+      }}
+      className="h-8 w-8 rounded-full p-0"
+      variant="destructiveGhost"
+      aria-label={t("deleteLabel")}
+    >
+      <Trash2 size={16} />
+    </Button>
   );
 }
 

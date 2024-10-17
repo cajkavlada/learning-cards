@@ -13,7 +13,7 @@ export default async function TopicDetailPage({
   params: { topicId: string };
 }) {
   const topic = await getTopicDetail(topicId);
-  const t = await getTranslations("question.list");
+  const t = await getTranslations();
   if (!topic) return null;
 
   return (
@@ -21,12 +21,17 @@ export default async function TopicDetailPage({
       <PageHeader title={topic.name} description={topic.description}>
         <div className="ml-auto flex gap-4">
           <Button asChild variant="outline" className="min-w-9 p-0">
-            <Link href={`/topics/${topicId}/edit`}>
+            <Link
+              href={`/topics/${topicId}/edit`}
+              aria-label={t("topic.card.editLabel")}
+            >
               <Pencil size={16} />
             </Link>
           </Button>
           <Button asChild>
-            <Link href={`/topics/${topicId}/question/new`}>{t("create")}</Link>
+            <Link href={`/topics/${topicId}/question/new`}>
+              {t("question.list.create")}
+            </Link>
           </Button>
           <StartQuizButton questions={topic.questions} topicIds={[topicId]} />
         </div>

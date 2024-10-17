@@ -68,9 +68,7 @@ export function QuestionAnswer({
   );
 
   async function handleNextQuestion() {
-    console.log("haha");
     const [, error] = await moveNext();
-
     if (error) {
       toast(error.name, { description: error.message });
     } else {

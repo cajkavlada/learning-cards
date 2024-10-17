@@ -25,7 +25,11 @@ export function TopicList({
       )}
       <div className="flex min-h-10 items-center gap-2 pb-1 pl-10 pr-4">
         {topics.length > 0 && (
-          <Checkbox checked={allSelected} onCheckedChange={checkAll} />
+          <Checkbox
+            checked={allSelected}
+            onCheckedChange={checkAll}
+            aria-label={t("checkAllLabel")}
+          />
         )}
         {selectedItems.size > 0 && (
           <>

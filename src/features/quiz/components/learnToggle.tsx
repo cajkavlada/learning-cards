@@ -26,8 +26,11 @@ export function LearnToggle({
         checked={learned}
         onCheckedChange={handleChangeLearned}
         id="marked-as-learned"
+        aria-labelledby="marked-as-learned-label"
       />
-      <Label htmlFor="marked-as-learned">{t("markAsLearned")}</Label>
+      <Label id="marked-as-learned-label" htmlFor="marked-as-learned">
+        {t("markAsLearned")}
+      </Label>
     </div>
   );
 

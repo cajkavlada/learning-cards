@@ -21,10 +21,13 @@
     "list": {
       "title": "Topics",
       "create": "Create a new topic",
-      "noTopics": "No topics found"
+      "noTopics": "No topics found",
+      "checkAllLabel": "Check all topics"
     },
     "card": {
-      "questionCount": "{count, plural, =1 {# question} other {# questions}}"
+      "questionCount": "{count, plural, =1 {# question} other {# questions}}",
+      "editLabel": "Edit topic",
+      "deleteLabel": "Delete topic"
     },
     "form": {
       "create": {
@@ -59,10 +62,14 @@
       "markAsLearned": "Mark as learned",
       "markAsNotLearned": "Mark as not learned",
       "delete": "Delete selected",
-      "noQuestions": "No questions found"
+      "noQuestions": "No questions found",
+      "checkAllLabel": "Check all questions",
+      "batchActionsLabel": "Batch question actions"
     },
     "row": {
-      "learned": "Learned"
+      "learned": "Learned",
+      "editLabel": "Edit question",
+      "deleteLabel": "Delete question"
     },
     "form": {
       "create": {

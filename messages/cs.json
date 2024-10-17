@@ -21,10 +21,13 @@
     "list": {
       "title": "Témata",
       "create": "Vytvořit nové téma",
-      "noTopics": "Nemáte žádná témata"
+      "noTopics": "Nemáte žádná témata",
+      "checkAllLabel": "Zaškrtnout všechna témata"
     },
     "card": {
-      "questionCount": "{count, plural, =0 {Žádné otázky} =1 {# otázka} few {# otázky} other {# otázek} }"
+      "questionCount": "{count, plural, =0 {Žádné otázky} =1 {# otázka} few {# otázky} other {# otázek} }",
+      "editLabel": "Upravit otázku",
+      "deleteLabel": "Smazat otázku"
     },
     "form": {
       "create": {
@@ -59,10 +62,14 @@
       "markAsLearned": "Označit jako naučené",
       "markAsNotLearned": "Označit jako nenaučené",
       "delete": "Smazat vybrané",
-      "noQuestions": "Nemáte žádné otázky"
+      "noQuestions": "Nemáte žádné otázky",
+      "checkAllLabel": "Zaškrtnout všechny otázky",
+      "batchActionsLabel": "Hromadné akce s otázkami"
     },
     "row": {
-      "learned": "Naučené"
+      "learned": "Naučené",
+      "editLabel": "Upravit otázku",
+      "deleteLabel": "Smazat otázku"
     },
     "form": {
       "create": {

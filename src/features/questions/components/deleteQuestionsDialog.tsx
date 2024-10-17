@@ -16,7 +16,7 @@ export function DeleteQuestionsButton({
   ids: Set<QuestionProps["id"]>;
 }) {
   const { openDialog } = useDialog();
-
+  const t = useTranslations("question.row");
   return (
     <>
       <div onClick={(e) => e.stopPropagation()}>
@@ -27,6 +27,7 @@ export function DeleteQuestionsButton({
           }}
           className="h-8 w-8 rounded-full p-0"
           variant="destructiveGhost"
+          aria-label={t("deleteLabel")}
         >
           <Trash2 size={16} />
         </Button>

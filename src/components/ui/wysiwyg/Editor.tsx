@@ -8,6 +8,7 @@ import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import { forwardRef } from "react";
+import Underline from "@tiptap/extension-underline";
 
 export const Editor = forwardRef<
   HTMLDivElement,
@@ -26,6 +27,7 @@ export const Editor = forwardRef<
         keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
       },
     }),
+    Underline,
   ];
 
   return (

@@ -9,6 +9,7 @@ import {
   Minus,
   Redo,
   Strikethrough,
+  Underline,
   Undo,
 } from "lucide-react";
 import { EditorButton } from "./EditorButton";
@@ -54,6 +55,13 @@ export function MenuBar({ value }: { value: string }) {
           isActive={editor.isActive("italic")}
         >
           <Italic size={16} />
+        </EditorButton>
+        <EditorButton
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          disabled={!editor.can().chain().focus().toggleUnderline().run()}
+          isActive={editor.isActive("underline")}
+        >
+          <Underline size={16} />
         </EditorButton>
         <EditorButton
           onClick={() => editor.chain().focus().toggleStrike().run()}

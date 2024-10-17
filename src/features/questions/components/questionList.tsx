@@ -73,7 +73,7 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
                   {t("markAsNotLearned")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="text-red-500"
+                  className="text-destructive"
                   onClick={() =>
                     openDialog(<DeleteQuestionsDialog ids={selectedItems} />)
                   }
@@ -84,8 +84,8 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
             </DropdownMenu>
           )}
           <CardTitle>
-            {t("title")} (<span className="text-green-500">{learnedCount}</span>
-            /{questions.length})
+            {t("title")} (<span className="text-primary">{learnedCount}</span>/
+            {questions.length})
           </CardTitle>
         </div>
       </CardHeader>

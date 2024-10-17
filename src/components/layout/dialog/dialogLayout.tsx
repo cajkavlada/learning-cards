@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "../../ui/dialog";
-import { Button } from "../../ui/button";
+import { Button, type ButtonProps } from "../../ui/button";
 import { useDialog } from "./useDialog";
 import { LoadingButton } from "~/components/form";
 
@@ -19,6 +19,7 @@ export function DialogLayout({
   onCancel,
   submitLoading,
   className,
+  submitVariant,
 }: {
   children: React.ReactNode;
   title: string;
@@ -29,6 +30,7 @@ export function DialogLayout({
   onCancel?: () => void;
   submitLoading?: boolean;
   className?: string;
+  submitVariant?: ButtonProps["variant"];
 }) {
   const { closeDialog } = useDialog();
 
@@ -54,7 +56,11 @@ export function DialogLayout({
           </Button>
         )}
         {submitLabel && onSubmit && (
-          <LoadingButton onClick={onSubmit} loading={submitLoading}>
+          <LoadingButton
+            onClick={onSubmit}
+            loading={submitLoading}
+            variant={submitVariant}
+          >
             {submitLabel}
           </LoadingButton>
         )}

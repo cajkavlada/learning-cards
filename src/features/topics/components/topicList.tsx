@@ -23,7 +23,7 @@ export function TopicList({
           {t("noTopics")}
         </div>
       )}
-      <div className="flex min-h-8 items-center gap-2 pb-1 pl-10 pr-4">
+      <div className="flex min-h-10 items-center gap-2 pb-1 pl-10 pr-4">
         {topics.length > 0 && (
           <Checkbox checked={allSelected} onCheckedChange={checkAll} />
         )}

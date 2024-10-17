@@ -14,10 +14,7 @@ export function ClientLink({
     <div onClick={(e) => e.stopPropagation()}>
       <Button
         {...props}
-        onClick={(e) => {
-          e.preventDefault();
-          router.push(href);
-        }}
+        onClick={() => router.push(href)}
         className="h-8 w-8 rounded-full p-0"
         variant="ghost"
       />

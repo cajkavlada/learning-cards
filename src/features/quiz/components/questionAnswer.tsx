@@ -35,32 +35,34 @@ export function QuestionAnswer({
       <div className="flex-1 overflow-auto">
         {showAnswer && <Editor value={question.answer} editable={false} />}
       </div>
-      <div className="flex w-full flex-row-reverse flex-wrap-reverse gap-4">
-        {!showAnswer && (
-          <Button onClick={() => setShowAnswer(!showAnswer)}>
-            {t("reveal")}
-          </Button>
-        )}
-        {!isLast && showAnswer && (
-          <LoadingButton onClick={handleNextQuestion} loading={nextPending}>
-            {t("next")}
-          </LoadingButton>
-        )}
-        {isLast && showAnswer && (
-          <LoadingButton onClick={handleRestartQuiz} loading={restartPending}>
-            {t("restart")}
-          </LoadingButton>
-        )}
-        {!isFirst && (
-          <LoadingButton
-            onClick={handlePreviousQuestion}
-            loading={previousPending}
-            variant="outline"
-          >
-            {t("previous")}
-          </LoadingButton>
-        )}
+      <div className="flex w-full flex-wrap gap-4">
         <LearnToggle markedAsLearned={question.markedAsLearned} />
+        <div className="flex flex-wrap gap-3">
+          {!isFirst && (
+            <LoadingButton
+              onClick={handlePreviousQuestion}
+              loading={previousPending}
+              variant="outline"
+            >
+              {t("previous")}
+            </LoadingButton>
+          )}
+          {!showAnswer && (
+            <Button onClick={() => setShowAnswer(!showAnswer)}>
+              {t("reveal")}
+            </Button>
+          )}
+          {!isLast && showAnswer && (
+            <LoadingButton onClick={handleNextQuestion} loading={nextPending}>
+              {t("next")}
+            </LoadingButton>
+          )}
+          {isLast && showAnswer && (
+            <LoadingButton onClick={handleRestartQuiz} loading={restartPending}>
+              {t("restart")}
+            </LoadingButton>
+          )}
+        </div>
       </div>
     </>
   );

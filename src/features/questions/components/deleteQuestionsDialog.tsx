@@ -26,7 +26,7 @@ export function DeleteQuestionsButton({
             openDialog(<DeleteQuestionsDialog ids={ids} />);
           }}
           className="h-8 w-8 rounded-full p-0"
-          variant="ghost"
+          variant="destructiveGhost"
         >
           <Trash2 size={16} />
         </Button>
@@ -50,6 +50,7 @@ export function DeleteQuestionsDialog({
       submitLabel={t("confirm")}
       submitLoading={isPending}
       onSubmit={onSubmit}
+      submitVariant="destructive"
     >
       {t("description", { count: ids.size })}
     </DialogLayout>

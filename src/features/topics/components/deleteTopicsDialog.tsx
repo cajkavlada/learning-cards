@@ -17,12 +17,9 @@ export function DeleteTopicsButton({ ids }: { ids: Set<TopicProps["id"]> }) {
     <>
       <div onClick={(e) => e.stopPropagation()}>
         <Button
-          onClick={(e) => {
-            e.preventDefault();
-            openDialog(<DeleteTopicsDialog ids={ids} />);
-          }}
+          onClick={() => openDialog(<DeleteTopicsDialog ids={ids} />)}
           className="h-8 w-8 rounded-full p-0"
-          variant="ghost"
+          variant="destructiveGhost"
         >
           <Trash2 size={16} />
         </Button>
@@ -41,6 +38,7 @@ function DeleteTopicsDialog({ ids }: { ids: Set<TopicProps["id"]> }) {
       submitLabel={t("confirm")}
       onSubmit={onSubmit}
       submitLoading={isPending}
+      submitVariant="destructive"
     >
       {t("description", { count: ids.size })}
     </DialogLayout>

@@ -40,7 +40,7 @@ export function QuestionRow({
           </div>
           {question.markedAsLearned ? (
             <SimpleTooltip content={t("learned")}>
-              <CircleCheckBig size={32} className="p-2 text-green-700" />
+              <CircleCheckBig size={32} className="p-2 text-primary" />
             </SimpleTooltip>
           ) : (
             <div className="w-8" />

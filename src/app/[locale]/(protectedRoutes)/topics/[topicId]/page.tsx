@@ -19,15 +19,15 @@ export default async function TopicDetailPage({
   return (
     <>
       <PageHeader title={topic.name} description={topic.description}>
+        <Button asChild variant="outline" className="min-w-9 rounded-full p-0">
+          <Link
+            href={`/topics/${topicId}/edit`}
+            aria-label={t("topic.card.editLabel")}
+          >
+            <Pencil size={16} />
+          </Link>
+        </Button>
         <div className="ml-auto flex gap-4">
-          <Button asChild variant="outline" className="min-w-9 p-0">
-            <Link
-              href={`/topics/${topicId}/edit`}
-              aria-label={t("topic.card.editLabel")}
-            >
-              <Pencil size={16} />
-            </Link>
-          </Button>
           <Button asChild>
             <Link href={`/topics/${topicId}/question/new`}>
               {t("question.list.create")}

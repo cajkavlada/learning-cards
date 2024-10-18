@@ -50,7 +50,7 @@
     },
     "delete": {
       "title": "Delete {count, plural, =1 {topic} other {topics}}",
-      "description": "This will delete {count, plural, =1 {topic and all its} other {selected topics all their}} questions.",
+      "description": "This will delete {count, plural, =1 {topic and all its} other {selected topics and all their}} questions.",
       "confirm": "Delete",
       "success": "{count, plural, =1 {Topic} other {Topics}} deleted successfully"
     }

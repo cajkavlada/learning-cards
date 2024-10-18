@@ -37,7 +37,7 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
   );
   return (
     <Card className="mx-4 mb-6 flex min-h-0 flex-col md:mb-2">
-      <CardHeader className="border-b-2">
+      <CardHeader className="border-b">
         <div className="flex h-8 items-center gap-2">
           {questions.length > 0 && (
             <Checkbox

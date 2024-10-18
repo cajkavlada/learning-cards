@@ -48,7 +48,7 @@ export function TopicCard({
               />
             </div>
             <CardTitle
-              className="flex-1 truncate text-wrap"
+              className="flex-1 truncate text-nowrap"
               id={`checkbox-label-${topic.name}`}
             >
               {topic.name}

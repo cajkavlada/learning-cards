@@ -11,7 +11,7 @@ export default async function TopicsListPage() {
   return (
     <>
       <PageHeader title={t("title")}>
-        <Button asChild>
+        <Button asChild className="ml-auto">
           <Link href={`/topics/new`}>{t("create")}</Link>
         </Button>
       </PageHeader>

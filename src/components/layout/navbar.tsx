@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
+import { ModeToggle } from "./modeToggle";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -37,7 +38,8 @@ export function Navbar() {
           </Link>
         );
       })}
-      <div className="ml-auto">
+      <div className="ml-auto flex gap-2">
+        <ModeToggle />
         <SignedOut>
           <SignInButton>{t("signIn")}</SignInButton>
         </SignedOut>

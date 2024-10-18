@@ -35,7 +35,7 @@ export function QuestionAnswer({
       <div className="flex-1 overflow-auto">
         {showAnswer && <Editor value={question.answer} editable={false} />}
       </div>
-      <div className="flex w-full flex-wrap gap-4">
+      <div className="flex w-full flex-wrap justify-end gap-4">
         <LearnToggle markedAsLearned={question.markedAsLearned} />
         <div className="flex flex-wrap gap-3">
           {!isFirst && (

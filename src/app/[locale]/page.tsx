@@ -7,7 +7,7 @@ import { Button } from "~/components/ui";
 export default async function HomePage() {
   const t = await getTranslations("home");
   return (
-    <div className="h-full overflow-auto bg-black text-white">
+    <div className="h-full overflow-auto">
       <div className="flex flex-col items-center space-y-8 p-6 md:flex-row md:space-x-8 md:space-y-0">
         <div className="w-full space-y-4 text-center md:w-1/2 md:text-left">
           <h1 className="text-4xl font-bold sm:text-6xl">{t("title")}</h1>

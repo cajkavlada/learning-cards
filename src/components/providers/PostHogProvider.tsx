@@ -1,7 +1,7 @@
 "use client";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
-import { env } from "../env";
+import { env } from "../../env";
 import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 

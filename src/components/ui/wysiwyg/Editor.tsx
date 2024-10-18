@@ -39,7 +39,7 @@ export const Editor = forwardRef<
         extensions={extensions}
         immediatelyRender={false}
         editorProps={{
-          attributes: { class: "overflow-auto bg-white" },
+          attributes: { class: "overflow-auto" },
         }}
         content={value}
       ></EditorProvider>

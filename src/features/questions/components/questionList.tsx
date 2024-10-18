@@ -92,7 +92,7 @@ export function QuestionList({ questions }: { questions: QuestionProps[] }) {
             </DropdownMenu>
           )}
           <CardTitle>
-            {t("title")} (<span className="text-primary">{learnedCount}</span>/
+            {t("title")} (<span className="text-input">{learnedCount}</span>/
             {questions.length})
           </CardTitle>
         </div>

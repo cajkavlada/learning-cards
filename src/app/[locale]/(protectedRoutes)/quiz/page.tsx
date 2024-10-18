@@ -10,14 +10,14 @@ export default async function TestPage() {
   const { currentQuestion, index, total } = currentQuestionInfo;
 
   return (
-    <div className="flex h-full flex-col gap-4 rounded-lg bg-white p-6 shadow-md">
+    <div className="flex h-full flex-col gap-4 p-6">
       <div className="w-full">
         <div className="flex">
           <h2 className="mb-4 text-xl font-bold">
             {t("title")} {index + 1}/{total}
           </h2>
         </div>
-        <h1 className="text-center text-2xl text-gray-800 md:text-4xl">
+        <h1 className="text-center text-2xl md:text-4xl">
           {currentQuestion.question}
         </h1>
       </div>

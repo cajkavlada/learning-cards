@@ -33,7 +33,7 @@ export function TopicCard({
   return (
     <li className="min-w-[250px] max-w-[350px] flex-1 flex-grow">
       <Card
-        className="w-full cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
+        className="w-full cursor-pointer hover:bg-card/40"
         tabIndex={0}
         onClick={handleCardClick}
         onKeyDown={(e) => e.key === "Enter" && handleCardClick()}

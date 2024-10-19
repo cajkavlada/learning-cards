@@ -9,6 +9,7 @@ import type {
   UpdateTopicProps,
   DeleteTopicsProps,
 } from "~/features/topics/types";
+import analyticsServerClient from "~/server/analytics";
 
 export async function getTopicsByUserQuery(userId: TopicProps["userId"]) {
   const topicList = await db
@@ -42,6 +43,12 @@ export async function getTopicDetailQuery({
 
 export async function createTopicMutation(input: CreateTopicProps) {
   const [newTopic] = await db.insert(topics).values(input).returning();
+
+  analyticsServerClient.capture({
+    distinctId: input.userId,
+    event: "topic created",
+    properties: { newTopic },
+  });
   return newTopic;
 }
 
@@ -55,6 +62,12 @@ export async function updateTopicMutation({
     .set(input)
     .where(and(eq(topics.id, id), eq(topics.userId, userId)))
     .returning();
+
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "topic updated",
+    properties: { updatedTopic },
+  });
   return updatedTopic;
 }
 
@@ -67,5 +80,10 @@ export async function deleteTopicsMutation({
     .where(and(inArray(topics.id, deleteIds), eq(topics.userId, userId)))
     .returning();
 
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "topics deleted",
+    properties: { deletedTopics },
+  });
   return deletedTopics;
 }

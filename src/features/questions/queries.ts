@@ -10,12 +10,14 @@ import type {
   UpdateQuestionLearnedStatusProps,
 } from "./types";
 import { and, eq, inArray } from "drizzle-orm";
+import analyticsServerClient from "~/server/analytics";
 
 export async function getQuestionDetailQuery(id: QuestionProps["id"]) {
   const question = await db.query.questions.findFirst({
     where: (model, { eq }) => eq(model.id, id),
     with: { topic: true },
   });
+
   return question;
 }
 
@@ -53,6 +55,13 @@ export async function createQuestionMutation({
   }
 
   const [newQuestion] = await db.insert(questions).values(input).returning();
+
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "question created",
+    properties: { newQuestion },
+  });
+
   return newQuestion;
 }
 
@@ -79,6 +88,13 @@ export async function updateQuestionMutation({
     .set(input)
     .where(eq(questions.id, id))
     .returning();
+
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "question updated",
+    properties: { updatedQuestion },
+  });
+
   return updatedQuestion;
 }
 
@@ -108,6 +124,12 @@ export async function switchLearnedMutation({
     .where(inArray(questions.id, ids))
     .returning();
 
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "questions learned status updated",
+    properties: { updatedQuestions },
+  });
+
   return updatedQuestions;
 }
 
@@ -130,10 +152,16 @@ export async function deleteQuestionsMutation({
     }
   });
 
-  const deletedQuestion = await db
+  const deletedQuestions = await db
     .delete(questions)
     .where(inArray(questions.id, deleteIds))
     .returning();
 
-  return deletedQuestion;
+  analyticsServerClient.capture({
+    distinctId: userId,
+    event: "questions deleted",
+    properties: { deletedQuestions },
+  });
+
+  return deletedQuestions;
 }

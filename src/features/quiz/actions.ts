@@ -21,6 +21,7 @@ import { revalidatePath } from "next/cache";
 import { shuffleArray } from "~/utils/shuffle";
 import { baseQuestionSchema } from "../questions/types";
 import { redirect } from "next/navigation";
+import analyticsServerClient from "~/server/analytics";
 
 export async function getCurrentQuestionInfo() {
   const user = auth();
@@ -104,6 +105,12 @@ export const restartQuizSession = createServerAction().handler(async () => {
   });
 
   revalidatePath("/quiz");
+
+  analyticsServerClient.capture({
+    distinctId: user.userId,
+    event: "quiz session restarted",
+    properties: { updatedQuizSession },
+  });
 
   return updatedQuizSession;
 });

@@ -18,6 +18,8 @@ import {
   type TopicProps,
 } from "./types";
 import { getTranslations } from "next-intl/server";
+import { topicRatelimit } from "~/server/ratelimit";
+import analyticsServerClient from "~/server/analytics";
 
 export async function getMyTopics() {
   const user = auth();
@@ -42,10 +44,22 @@ export const createTopic = createServerAction()
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
 
+    const { success } = await topicRatelimit.limit(user.userId);
+    if (!success) {
+      throw new Error("Topic creation rate limit reached. Try again later.");
+    }
+
     const newTopic = await createTopicMutation({
       userId: user.userId,
       ...input,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "topic created",
+      properties: { newTopic },
+    });
+
     revalidatePath("/topics");
     return newTopic;
   });
@@ -63,6 +77,13 @@ export const updateTopic = createServerAction()
       ...input,
       userId: user.userId,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "topic updated",
+      properties: { updatedTopic },
+    });
+
     revalidatePath("/topics/[topicId]", "page");
     return updatedTopic;
   });
@@ -73,10 +94,17 @@ export const deleteTopic = createServerAction()
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
 
-    const deletedTopic = await deleteTopicsMutation({
+    const deletedTopics = await deleteTopicsMutation({
       userId: user.userId,
       deleteIds: input,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "topics deleted",
+      properties: { deletedTopics },
+    });
+
     revalidatePath("/topics");
-    return deletedTopic;
+    return deletedTopics;
   });

@@ -18,6 +18,8 @@ import {
 } from "./types";
 import { auth } from "@clerk/nextjs/server";
 import { getTranslations } from "next-intl/server";
+import analyticsServerClient from "~/server/analytics";
+import { questionRatelimit } from "~/server/ratelimit";
 
 export async function getQuestionDetail(id: QuestionProps["id"]) {
   const user = auth();
@@ -43,10 +45,22 @@ export const createQuestion = createServerAction()
     const user = auth();
     if (!user.userId) throw new Error("Not authenticated");
 
+    const { success } = await questionRatelimit.limit(user.userId);
+    if (!success) {
+      throw new Error("Question creation rate limit reached. Try again later.");
+    }
+
     const newQuestion = await createQuestionMutation({
       ...input,
       userId: user.userId,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "question created",
+      properties: { newQuestion },
+    });
+
     revalidatePath("/topics/[topicId]", "page");
     return newQuestion;
   });
@@ -64,6 +78,13 @@ export const updateQuestion = createServerAction()
       ...input,
       userId: user.userId,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "question updated",
+      properties: { updatedQuestion },
+    });
+
     revalidatePath("/topics/[topicId]", "page");
     return updatedQuestion;
   });
@@ -78,6 +99,13 @@ export const switchLearnedStatus = createServerAction()
       ...input,
       userId: user.userId,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "questions learned status updated",
+      properties: { updatedQuestions },
+    });
+
     revalidatePath("/topics/[topicId]", "page");
     return updatedQuestions;
   });
@@ -92,6 +120,13 @@ export const deleteQuestions = createServerAction()
       userId: user.userId,
       deleteIds: input,
     });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "questions deleted",
+      properties: { deletedQuestions },
+    });
+
     revalidatePath("/topics/[topicId]", "page");
     return deletedQuestions;
   });

@@ -9,7 +9,6 @@ import type {
 import { quizSessions, quizToTopics } from "~/server/db/schema";
 import type { TopicProps } from "../topics/types";
 import { eq } from "drizzle-orm";
-import analyticsServerClient from "~/server/analytics";
 
 export async function getQuizSessionQuery(userId: QuizSessionProps["userId"]) {
   const quizSession = await db.query.quizSessions.findFirst({
@@ -22,12 +21,6 @@ export async function getQuizSessionQuery(userId: QuizSessionProps["userId"]) {
 export async function createQuizSessionMutation(input: CreateQuizSessionProps) {
   const [quizSession] = await db.insert(quizSessions).values(input).returning();
 
-  analyticsServerClient.capture({
-    distinctId: input.userId,
-    event: "quiz session created",
-    properties: { quizSession },
-  });
-
   return quizSession;
 }
 
@@ -38,12 +31,6 @@ export async function deleteQuizSessionMutation(
     .delete(quizSessions)
     .where(eq(quizSessions.userId, userId))
     .returning();
-
-  analyticsServerClient.capture({
-    distinctId: userId,
-    event: "quiz session deleted",
-    properties: { deletedQuizSession },
-  });
 
   return deletedQuizSession;
 }
@@ -80,7 +67,7 @@ export async function updateQuizSessionMutation({
   userId,
   ...input
 }: UpdateQuizSessionProps) {
-  const updatedQuizSession = await db
+  const [updatedQuizSession] = await db
     .update(quizSessions)
     .set(input)
     .where(eq(quizSessions.userId, userId))

@@ -84,6 +84,12 @@ export const startNewQuizSession = createServerAction()
     });
 
     await addQuizTopicLinkMutation({ userId: user.userId, topicIds: input });
+
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "new quiz session created",
+    });
+
     redirect(`/quiz`);
   });
 
@@ -109,7 +115,6 @@ export const restartQuizSession = createServerAction().handler(async () => {
   analyticsServerClient.capture({
     distinctId: user.userId,
     event: "quiz session restarted",
-    properties: { updatedQuizSession },
   });
 
   return updatedQuizSession;
@@ -131,13 +136,24 @@ export const nextQuestion = createServerAction().handler(async () => {
 
   const nextQuestionIndex = quizSession.currentQuestionIndex + 1;
 
-  await updateQuizSessionMutation({
+  const updatedQuizSession = await updateQuizSessionMutation({
     userId: user.userId,
     currentQuestionIndex: nextQuestionIndex,
   });
 
-  revalidatePath("/quiz/[quizId]", "page");
+  analyticsServerClient.capture({
+    distinctId: user.userId,
+    event: "moving to next question",
+    properties: {
+      questionIndex: updatedQuizSession?.currentQuestionIndex,
+      questionId:
+        updatedQuizSession?.questionsIds[
+          updatedQuizSession?.currentQuestionIndex
+        ],
+    },
+  });
 
+  revalidatePath("/quiz/[quizId]", "page");
   return null;
 });
 
@@ -150,13 +166,24 @@ export const previousQuestion = createServerAction().handler(async () => {
 
   const previousQuestionIndex = quizSession.currentQuestionIndex - 1;
 
-  await updateQuizSessionMutation({
+  const updatedQuizSession = await updateQuizSessionMutation({
     userId: user.userId,
     currentQuestionIndex: previousQuestionIndex,
   });
 
-  revalidatePath("/quiz/[quizId]", "page");
+  analyticsServerClient.capture({
+    distinctId: user.userId,
+    event: "moving to previous question",
+    properties: {
+      questionIndex: updatedQuizSession?.currentQuestionIndex,
+      questionId:
+        updatedQuizSession?.questionsIds[
+          updatedQuizSession?.currentQuestionIndex
+        ],
+    },
+  });
 
+  revalidatePath("/quiz/[quizId]", "page");
   return null;
 });
 
@@ -174,13 +201,19 @@ export const switchLearned = createServerAction()
 
     if (!currentQuestionId) throw new Error("Question not found");
 
-    await updateQuestionMutation({
+    const updatedQuestion = await updateQuestionMutation({
       id: currentQuestionId,
       userId: user.userId,
       markedAsLearned: input,
     });
 
+    analyticsServerClient.capture({
+      distinctId: user.userId,
+      event: "quiz session restarted",
+      properties: { updatedQuestion },
+    });
+
     revalidatePath("/quiz/[quizId]", "page");
 
-    return null;
+    return updatedQuestion;
   });

@@ -1,9 +1,9 @@
-import { Button } from "~/components/ui";
 import Link from "next/link";
-import { PageHeader } from "~/components/layout/pageHeader";
-import { TopicList } from "~/features/topics/components/topicList";
-import { getMyTopics } from "~/features/topics/actions";
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "~/components/layout/pageHeader";
+import { Button } from "~/components/ui";
+import { getMyTopics } from "~/features/topics/actions";
+import { TopicList } from "./_components/topicList";
 
 export default async function TopicsListPage() {
   const topics = await getMyTopics();

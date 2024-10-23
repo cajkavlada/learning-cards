@@ -13,12 +13,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "~/components/ui";
-import type { QuestionProps } from "../types";
+import type { QuestionProps } from "~/features/questions/types";
 import { EllipsisVertical } from "lucide-react";
 import { useSelectInList } from "~/utils/useSelectInList";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 import { DeleteQuestionsDialog } from "./deleteQuestionsDialog";
-import { switchLearnedStatus } from "../actions";
+import { switchLearnedStatus } from "~/features/questions/actions";
 import { useServerAction } from "zsa-react";
 import { useMemo } from "react";
 import { QuestionRow } from "./questionRow";

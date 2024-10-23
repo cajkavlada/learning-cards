@@ -9,7 +9,7 @@ import {
 } from "~/components/ui";
 import { Pencil } from "lucide-react";
 import { DeleteTopicsButton } from "./deleteTopicsDialog";
-import type { TopicPropsWithQuestionCount } from "../types";
+import type { TopicPropsWithQuestionCount } from "~/features/topics/types";
 import type { CheckedState } from "@radix-ui/react-checkbox";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";

@@ -7,7 +7,7 @@ import {
   SimpleTooltip,
 } from "~/components/ui";
 import type { CheckedState } from "@radix-ui/react-checkbox";
-import type { QuestionProps } from "../types";
+import type { QuestionProps } from "~/features/questions/types";
 import { CircleCheckBig, Pencil } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { DeleteQuestionsButton } from "./deleteQuestionsDialog";

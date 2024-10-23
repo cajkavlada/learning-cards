@@ -2,8 +2,8 @@
 
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
-import { deleteQuestions } from "../actions";
-import type { QuestionProps } from "../types";
+import { deleteQuestions } from "~/features/questions/actions";
+import type { QuestionProps } from "~/features/questions/types";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 import { Button } from "~/components/ui";

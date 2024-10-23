@@ -2,7 +2,10 @@
 
 import { useServerAction } from "zsa-react";
 import { Button } from "~/components/ui";
-import { checkQuizSessionConflict, startNewQuizSession } from "../actions";
+import {
+  checkQuizSessionConflict,
+  startNewQuizSession,
+} from "~/features/quiz/actions";
 import { useRouter } from "next/navigation";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";

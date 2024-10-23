@@ -2,11 +2,11 @@
 
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
-import { Button } from "~/components/ui";
 import { Trash2 } from "lucide-react";
-import { deleteTopic } from "../actions";
-import type { TopicProps } from "../types";
 import { useTranslations } from "next-intl";
+import { Button } from "~/components/ui";
+import { deleteTopic } from "~/features/topics/actions";
+import type { TopicProps } from "~/features/topics/types";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 

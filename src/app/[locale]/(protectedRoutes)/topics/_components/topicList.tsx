@@ -2,11 +2,11 @@
 
 import { useSelectInList } from "~/utils/useSelectInList";
 import { DeleteTopicsButton } from "./deleteTopicsDialog";
-import { StartQuizButton } from "~/features/quiz/components/startQuizButton";
+import { StartQuizButton } from "./startQuizButton";
 import { useTranslations } from "next-intl";
 import { TopicCard } from "./topicCard";
 import { Checkbox } from "~/components/ui";
-import type { TopicPropsWithQuestionCount } from "../types";
+import type { TopicPropsWithQuestionCount } from "~/features/topics/types";
 
 export function TopicList({
   topics,

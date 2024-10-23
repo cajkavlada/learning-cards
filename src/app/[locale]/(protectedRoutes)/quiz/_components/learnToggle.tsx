@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
 import { Label, Switch } from "~/components/ui";
-import { switchLearned } from "../actions";
+import { switchLearned } from "~/features/quiz/actions";
 import type { QuestionProps } from "~/features/questions/types";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";

@@ -3,8 +3,8 @@ import { getTopicDetail } from "~/features/topics/actions";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";
-import { QuestionList } from "~/features/questions/components/questionList";
-import { StartQuizButton } from "~/features/quiz/components/startQuizButton";
+import { QuestionList } from "./_components/questionList";
+import { StartQuizButton } from "../_components/startQuizButton";
 import { getTranslations } from "next-intl/server";
 
 export default async function TopicDetailPage({

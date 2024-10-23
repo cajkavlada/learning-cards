@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { Button } from "~/components/ui";
 import type { QuestionProps } from "~/features/questions/types";
-import { nextQuestion, previousQuestion, restartQuizSession } from "../actions";
+import {
+  nextQuestion,
+  previousQuestion,
+  restartQuizSession,
+} from "~/features/quiz/actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { LoadingButton } from "~/components/form";

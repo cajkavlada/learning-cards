@@ -13,12 +13,13 @@ import type { TopicProps } from "~/features/topics/types";
 import type { QuestionProps } from "~/features/questions/types";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { useTopicStore } from "../_hooks/useTopicSelected";
 
 export function StartQuizButton({
-  topicIds,
+  topicId,
   questions,
 }: {
-  topicIds: TopicProps["id"][];
+  topicId?: TopicProps["id"];
   questions?: QuestionProps[];
 }) {
   const router = useRouter();
@@ -34,6 +35,8 @@ export function StartQuizButton({
     checkQuizSessionConflict,
   );
 
+  const selectedTopics = useTopicStore((state) => state.selectedItems);
+  const topicsToTest = topicId ? [topicId] : Array.from(selectedTopics);
   return (
     <Button disabled={quizDisabled} onClick={startQuiz}>
       {t("start")}
@@ -41,9 +44,9 @@ export function StartQuizButton({
   );
 
   async function startQuiz() {
-    const [data] = await checkForConflict(topicIds);
+    const [data] = await checkForConflict(topicsToTest);
     if (!data) router.push("/quiz");
-    else openDialog(<ConflictDialog topicIds={topicIds} />);
+    else openDialog(<ConflictDialog topicIds={topicsToTest} />);
   }
 }
 

@@ -33,7 +33,7 @@ export default async function TopicDetailPage({
               {t("question.list.create")}
             </Link>
           </Button>
-          <StartQuizButton questions={topic.questions} topicIds={[topicId]} />
+          <StartQuizButton questions={topic.questions} topicId={topicId} />
         </div>
       </PageHeader>
       <QuestionList questions={topic.questions} />

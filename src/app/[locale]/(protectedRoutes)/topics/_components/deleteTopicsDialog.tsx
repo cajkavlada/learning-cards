@@ -9,8 +9,9 @@ import { deleteTopic } from "~/features/topics/actions";
 import type { TopicProps } from "~/features/topics/types";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import { useDialog } from "~/components/layout/dialog/useDialog";
+import { useTopicStore } from "../_hooks/useTopicSelected";
 
-export function DeleteTopicsButton({ ids }: { ids: Set<TopicProps["id"]> }) {
+export function DeleteTopicsButton({ id }: { id?: TopicProps["id"] }) {
   const { openDialog } = useDialog();
   const t = useTranslations("topic.card");
 
@@ -18,7 +19,7 @@ export function DeleteTopicsButton({ ids }: { ids: Set<TopicProps["id"]> }) {
     <Button
       onClick={(e) => {
         e.stopPropagation();
-        openDialog(<DeleteTopicsDialog ids={ids} />);
+        openDialog(<DeleteTopicsDialog id={id} />);
       }}
       className="h-8 w-8 rounded-full p-0"
       variant="destructiveGhost"
@@ -29,27 +30,31 @@ export function DeleteTopicsButton({ ids }: { ids: Set<TopicProps["id"]> }) {
   );
 }
 
-function DeleteTopicsDialog({ ids }: { ids: Set<TopicProps["id"]> }) {
+function DeleteTopicsDialog({ id }: { id?: TopicProps["id"] }) {
   const t = useTranslations("topic.delete");
   const { closeDialog } = useDialog();
   const { isPending, execute: deleteTopics } = useServerAction(deleteTopic);
+
+  const selectedTopicsFromStore = useTopicStore((state) => state.selectedItems);
+  const topicsToDelete = id ? [id] : Array.from(selectedTopicsFromStore);
+
   return (
     <DialogLayout
-      title={t("title", { count: ids.size })}
+      title={t("title", { count: topicsToDelete.length })}
       submitLabel={t("confirm")}
       onSubmit={onSubmit}
       submitLoading={isPending}
       submitVariant="destructive"
     >
-      {t("description", { count: ids.size })}
+      {t("description", { count: topicsToDelete.length })}
     </DialogLayout>
   );
 
   async function onSubmit() {
-    const [data, error] = await deleteTopics(Array.from(ids));
+    const [data, error] = await deleteTopics(topicsToDelete);
 
     if (data) {
-      toast(t("success", { count: ids.size }));
+      toast(t("success", { count: topicsToDelete.length }));
       closeDialog();
     }
     if (error) {

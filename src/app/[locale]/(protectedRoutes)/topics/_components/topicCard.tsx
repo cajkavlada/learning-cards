@@ -10,25 +10,21 @@ import {
 import { Pencil } from "lucide-react";
 import { DeleteTopicsButton } from "./deleteTopicsDialog";
 import type { TopicPropsWithQuestionCount } from "~/features/topics/types";
-import type { CheckedState } from "@radix-ui/react-checkbox";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useTopicSelect } from "../_hooks/useTopicSelected";
 
-export function TopicCard({
-  topic,
-  checked,
-  onCheckedChange,
-}: {
-  topic: TopicPropsWithQuestionCount;
-  checked: CheckedState;
-  onCheckedChange: (checked: CheckedState) => void;
-}) {
+export function TopicCard({ topic }: { topic: TopicPropsWithQuestionCount }) {
   const t = useTranslations("topic.card");
   const router = useRouter();
+
+  const { selectedTopic, toggleSelectTopic } = useTopicSelect(topic.id);
 
   function handleCardClick() {
     router.push(`/topics/${topic.id}`);
   }
+
+  console.log("rendering topic card", topic.id);
 
   return (
     <li className="min-w-[250px] max-w-[350px] flex-1 flex-grow">
@@ -42,8 +38,10 @@ export function TopicCard({
           <div className="flex items-center">
             <div className="mr-2 flex" onClick={(e) => e.stopPropagation()}>
               <Checkbox
-                checked={checked}
-                onCheckedChange={onCheckedChange}
+                checked={selectedTopic}
+                onCheckedChange={(checked) =>
+                  toggleSelectTopic(topic.id, checked)
+                }
                 aria-labelledby={`checkbox-label-${topic.name}`}
               />
             </div>

@@ -2,11 +2,10 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "~/components/layout/pageHeader";
 import { Button } from "~/components/ui";
-import { getMyTopics } from "~/features/topics/actions";
 import { TopicList } from "./_components/topicList";
+import { Suspense } from "react";
 
-export default async function TopicsListPage() {
-  const topics = await getMyTopics();
+export default async function TopicsPage() {
   const t = await getTranslations("topic.list");
   return (
     <>
@@ -15,7 +14,9 @@ export default async function TopicsListPage() {
           <Link href={`/topics/new`}>{t("create")}</Link>
         </Button>
       </PageHeader>
-      <TopicList topics={topics} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TopicList />
+      </Suspense>
     </>
   );
 }

@@ -1,16 +1,12 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { TopicCard } from "./topicCard";
-import type { TopicPropsWithQuestionCount } from "~/features/topics/types";
 import { TopicsBatchToolbar } from "./topicsBatchToolbar";
+import { getMyTopics } from "~/features/topics/actions";
 
-export function TopicList({
-  topics,
-}: {
-  topics: TopicPropsWithQuestionCount[];
-}) {
-  const t = useTranslations("topic.list");
+export async function TopicList() {
+  const t = await getTranslations("topic.list");
+  const topics = await getMyTopics();
+
   if (topics.length === 0) {
     return (
       <div className="flex h-full items-center justify-center">

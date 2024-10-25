@@ -10,26 +10,19 @@ import { useRouter } from "next/navigation";
 import { useDialog } from "~/components/layout/dialog/useDialog";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import type { TopicProps } from "~/features/topics/types";
-import type { QuestionProps } from "~/features/questions/types";
-import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useTopicStore } from "../_hooks/useTopicSelected";
 
 export function StartQuizButton({
   topicId,
-  questions,
+  disabled,
 }: {
   topicId?: TopicProps["id"];
-  questions?: QuestionProps[];
+  disabled?: boolean;
 }) {
   const router = useRouter();
   const t = useTranslations("quiz");
   const { openDialog } = useDialog();
-
-  const quizDisabled = useMemo(() => {
-    if (!questions) return false;
-    return !questions.filter((q) => !q.markedAsLearned).length;
-  }, [questions]);
 
   const { execute: checkForConflict } = useServerAction(
     checkQuizSessionConflict,
@@ -38,7 +31,7 @@ export function StartQuizButton({
   const selectedTopics = useTopicStore((state) => state.selectedItems);
   const topicsToTest = topicId ? [topicId] : Array.from(selectedTopics);
   return (
-    <Button disabled={quizDisabled} onClick={startQuiz}>
+    <Button disabled={disabled} onClick={startQuiz}>
       {t("start")}
     </Button>
   );

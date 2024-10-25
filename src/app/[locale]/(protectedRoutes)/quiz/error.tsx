@@ -10,7 +10,7 @@ export default function Error({
   error: Error & { digest?: string };
 }) {
   const router = useRouter();
-  const t = useTranslations("homePage");
+  const t = useTranslations("home");
 
   return (
     <div className="flex flex-col justify-center gap-4">
@@ -18,7 +18,7 @@ export default function Error({
       <pre>{error.message}</pre>
       <div>
         <Button onClick={() => router.push("/topics")}>
-          {t("goToTopics")}
+          {t("topicsLink")}
         </Button>
       </div>
     </div>

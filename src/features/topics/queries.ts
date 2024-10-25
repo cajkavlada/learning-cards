@@ -37,7 +37,13 @@ export async function getTopicDetailQuery({
       },
     },
   });
-  return topic;
+
+  if (topic) {
+    const testable = topic.questions.some(
+      (question) => !question.markedAsLearned,
+    );
+    return { ...topic, testable };
+  }
 }
 
 export async function createTopicMutation(input: CreateTopicProps) {

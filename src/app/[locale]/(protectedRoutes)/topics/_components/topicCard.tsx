@@ -64,7 +64,7 @@ export function TopicCard({ topic }: { topic: TopicPropsWithQuestionCount }) {
             >
               <Pencil size={16} />
             </Button>
-            <DeleteTopicsButton ids={new Set([topic.id])} />
+            <DeleteTopicsButton id={topic.id} />
           </div>
           <CardDescription className="truncate text-wrap">
             {topic.description}

@@ -26,8 +26,6 @@ export function TopicCard({ topic }: { topic: TopicPropsWithQuestionCount }) {
     router.push(`/topics/${topic.id}`);
   }
 
-  console.log("rendering topic card", topic.id);
-
   return (
     <li className="min-w-[250px] max-w-[350px] flex-1 flex-grow">
       <Card

@@ -23,6 +23,7 @@
 - [x] Postlimiting
 - [ ] Suspending data requests and skeletons (lists of topics and questions) or use loading pages(quiz)
 - [ ] Zustand init and use in batch selecting of items
+- [ ] Error managemnt (Sentry)
 - [ ] Monorepo init (turbo)
 - [ ] Mobile app init (Expo)
 - [ ] Set up TRPC for Mobile App

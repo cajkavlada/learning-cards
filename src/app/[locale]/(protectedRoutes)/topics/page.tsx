@@ -4,6 +4,7 @@ import { PageHeader } from "~/components/layout/pageHeader";
 import { Button } from "~/components/ui";
 import { TopicList } from "./_components/topicList";
 import { Suspense } from "react";
+import { TopicListSkeleton } from "./_components/topicListSkeleton";
 
 export default async function TopicsPage() {
   const t = await getTranslations("topic.list");
@@ -14,7 +15,7 @@ export default async function TopicsPage() {
           <Link href={`/topics/new`}>{t("create")}</Link>
         </Button>
       </PageHeader>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<TopicListSkeleton />}>
         <TopicList />
       </Suspense>
     </>

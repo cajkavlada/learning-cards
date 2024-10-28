@@ -19,7 +19,7 @@ export default async function HomePage() {
           </ul>
           <SignedIn>
             <Button asChild>
-              <Link href="/topics">{t("goToTopics")}</Link>
+              <Link href="/topics">{t("topicsLink")}</Link>
             </Button>
           </SignedIn>
         </div>

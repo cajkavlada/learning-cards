@@ -6,34 +6,32 @@ import {
   Checkbox,
   SimpleTooltip,
 } from "~/components/ui";
-import type { CheckedState } from "@radix-ui/react-checkbox";
 import type { QuestionProps } from "~/features/questions/types";
 import { CircleCheckBig, Pencil } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { DeleteQuestionsButton } from "./deleteQuestionsDialog";
 import { Editor } from "~/components/ui/wysiwyg/Editor";
 import { useTranslations } from "next-intl";
+import { useQuestionSelect } from "../_hooks/useQuestionSelected";
 
-export function QuestionRow({
-  question,
-  checked,
-  onCheckedChange,
-}: {
-  question: QuestionProps;
-  checked: CheckedState;
-  onCheckedChange: (checked: CheckedState) => void;
-}) {
+export function QuestionRow({ question }: { question: QuestionProps }) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("question.row");
+  const { isQuestionSelected, toggleSelectQuestion } = useQuestionSelect(
+    question.id,
+  );
+
   return (
     <li>
       <AccordionItem value={`question-${question.id}`}>
         <div className="flex items-center">
           <div className="flex items-center pr-2">
             <Checkbox
-              checked={checked}
-              onCheckedChange={onCheckedChange}
+              checked={isQuestionSelected}
+              onCheckedChange={(checked) =>
+                toggleSelectQuestion(question.id, checked)
+              }
               aria-labelledby={`checkbox-label-${question.question}`}
             />
           </div>
@@ -60,7 +58,7 @@ export function QuestionRow({
           >
             <Pencil size={16} />
           </Button>
-          <DeleteQuestionsButton ids={new Set([question.id])} />
+          <DeleteQuestionsButton id={question.id} />
         </div>
         <AccordionContent>
           <Editor value={question.answer} editable={false} />

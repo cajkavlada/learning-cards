@@ -16,8 +16,10 @@ export function useTopicBatchSelect(topics: TopicPropsWithQuestionCount[]) {
 }
 
 export function useTopicSelect(topicId: TopicPropsWithQuestionCount["id"]) {
-  const selectedTopic = useTopicStore((state) => state.selectedItem(topicId));
+  const isTopicSelected = useTopicStore((state) =>
+    state.isItemSelected(topicId),
+  );
   const toggleSelectTopic = useTopicStore((state) => state.toggleSelectItem);
 
-  return { selectedTopic, toggleSelectTopic };
+  return { isTopicSelected, toggleSelectTopic };
 }

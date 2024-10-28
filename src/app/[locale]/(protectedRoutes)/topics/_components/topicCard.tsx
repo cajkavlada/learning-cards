@@ -20,7 +20,7 @@ export function TopicCard({ topic }: { topic: TopicPropsWithQuestionCount }) {
   const t = useTranslations("topic.card");
   const router = useRouter();
 
-  const { selectedTopic, toggleSelectTopic } = useTopicSelect(topic.id);
+  const { isTopicSelected, toggleSelectTopic } = useTopicSelect(topic.id);
 
   function handleCardClick() {
     router.push(`/topics/${topic.id}`);
@@ -38,7 +38,7 @@ export function TopicCard({ topic }: { topic: TopicPropsWithQuestionCount }) {
           <div className="flex items-center">
             <div className="mr-2 flex" onClick={(e) => e.stopPropagation()}>
               <Checkbox
-                checked={selectedTopic}
+                checked={isTopicSelected}
                 onCheckedChange={(checked) =>
                   toggleSelectTopic(topic.id, checked)
                 }

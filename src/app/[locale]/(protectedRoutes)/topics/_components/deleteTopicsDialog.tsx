@@ -35,6 +35,7 @@ function DeleteTopicsDialog({ id }: { id?: TopicProps["id"] }) {
   const { closeDialog } = useDialog();
   const { isPending, execute: deleteTopics } = useServerAction(deleteTopic);
 
+  const clearSelection = useTopicStore((state) => state.clearSelection);
   const selectedTopicsFromStore = useTopicStore((state) => state.selectedItems);
   const topicsToDelete = id ? [id] : Array.from(selectedTopicsFromStore);
 
@@ -56,6 +57,7 @@ function DeleteTopicsDialog({ id }: { id?: TopicProps["id"] }) {
     if (data) {
       toast(t("success", { count: topicsToDelete.length }));
       closeDialog();
+      clearSelection();
     }
     if (error) {
       toast(error.name, { description: error.message });

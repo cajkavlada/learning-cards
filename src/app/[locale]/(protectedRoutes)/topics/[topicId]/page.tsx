@@ -36,7 +36,10 @@ export default async function TopicDetailPage({
           <StartQuizButton disabled={!topic.testable} topicId={topicId} />
         </div>
       </PageHeader>
-      <QuestionList questions={topic.questions} />
+      <QuestionList
+        questions={topic.questions}
+        learnedCount={topic.learnedCount}
+      />
     </>
   );
 }

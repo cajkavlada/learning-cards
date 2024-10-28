@@ -42,7 +42,11 @@ export async function getTopicDetailQuery({
     const testable = topic.questions.some(
       (question) => !question.markedAsLearned,
     );
-    return { ...topic, testable };
+    const learnedCount = topic.questions.filter(
+      (question) => question.markedAsLearned,
+    ).length;
+
+    return { ...topic, testable, learnedCount };
   }
 }
 

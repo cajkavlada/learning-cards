@@ -12,9 +12,9 @@ export default function Error({
 }) {
   const t = useTranslations("error");
   return (
-    <div className="flex flex-col items-center justify-center gap-4 pt-4">
+    <div className="flex flex-col items-center justify-center gap-4 px-4 pt-4">
       <h1>Error</h1>
-      <pre>{error.message}</pre>
+      <pre className="text-wrap">{error.message}</pre>
       <div>
         <Button onClick={reset}>{t("tryAgain")}</Button>
       </div>

@@ -21,8 +21,9 @@
 - [x] Theme definition
 - [x] Analytics
 - [x] Postlimiting
-- [ ] Suspending data requests and skeletons (lists of topics and questions) or use loading pages(quiz)
-- [ ] Zustand init and use in batch selecting of items
+- [x] Suspending data requests and skeletons (lists of topics and questions) or use loading pages(quiz)
+- [x] Zustand init and use in batch selecting of items
+- [ ] Analyse and possibly incrorporate Neon
 - [ ] Error managemnt (Sentry)
 - [ ] Monorepo init (turbo)
 - [ ] Mobile app init (Expo)

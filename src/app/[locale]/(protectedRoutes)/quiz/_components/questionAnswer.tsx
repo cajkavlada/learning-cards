@@ -40,7 +40,7 @@ export function QuestionAnswer({
         {showAnswer && <Editor value={question.answer} editable={false} />}
       </div>
       <div className="flex w-full flex-wrap justify-end gap-4">
-        <LearnToggle markedAsLearned={question.markedAsLearned} />
+        <LearnToggle initialLearned={question.markedAsLearned} />
         <div className="flex flex-wrap gap-3">
           {!isFirst && (
             <LoadingButton

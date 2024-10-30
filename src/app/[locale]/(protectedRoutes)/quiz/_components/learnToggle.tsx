@@ -1,29 +1,28 @@
-import { useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
 import { Label, Switch } from "~/components/ui";
 import { switchLearned } from "~/features/quiz/actions";
-import type { QuestionProps } from "~/features/questions/types";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import type { QuestionProps } from "~/features/questions/types";
 
 export function LearnToggle({
-  markedAsLearned,
+  initialLearned,
 }: {
-  markedAsLearned: QuestionProps["markedAsLearned"];
+  initialLearned: QuestionProps["markedAsLearned"];
 }) {
   const t = useTranslations("quiz.progress");
-  const [learned, setLearned] = useState(markedAsLearned);
 
-  const { execute: toggleLearned } = useServerAction(switchLearned);
-
-  useEffect(() => {
-    setLearned(markedAsLearned);
-  }, [markedAsLearned]);
+  const {
+    execute: toggleLearned,
+    data: learned,
+    setOptimistic,
+    isPending,
+  } = useServerAction(switchLearned);
 
   return (
     <div className="flex items-center space-x-2">
       <Switch
-        checked={learned}
+        checked={learned ?? (isPending ? !initialLearned : initialLearned)}
         onCheckedChange={handleChangeLearned}
         id="marked-as-learned"
         aria-labelledby="marked-as-learned-label"
@@ -35,10 +34,9 @@ export function LearnToggle({
   );
 
   async function handleChangeLearned(checked: boolean) {
-    setLearned(checked);
+    await setOptimistic(checked);
     const [, error] = await toggleLearned(checked);
     if (error) {
-      setLearned(!checked);
       toast(error.name, { description: error.message });
     }
   }

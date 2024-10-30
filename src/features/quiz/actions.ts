@@ -214,6 +214,5 @@ export const switchLearned = createServerAction()
     });
 
     revalidatePath("/quiz/[quizId]", "page");
-
-    return updatedQuestion;
+    return updatedQuestion?.markedAsLearned;
   });

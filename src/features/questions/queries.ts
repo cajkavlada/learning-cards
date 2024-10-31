@@ -115,10 +115,10 @@ export async function switchLearnedMutation({
 
 export async function deleteQuestionsMutation({
   userId,
-  deleteIds,
+  questionIds,
 }: DeleteQuestionsProps) {
   const questionsToDelete = await db.query.questions.findMany({
-    where: (model, { inArray }) => inArray(model.id, deleteIds),
+    where: (model, { inArray }) => inArray(model.id, questionIds),
     with: { topic: true },
   });
 
@@ -134,7 +134,7 @@ export async function deleteQuestionsMutation({
 
   const deletedQuestions = await db
     .delete(questions)
-    .where(inArray(questions.id, deleteIds))
+    .where(inArray(questions.id, questionIds))
     .returning();
 
   return deletedQuestions;

@@ -1,12 +1,7 @@
 "use server";
 
-import { createServerAction } from "zsa";
-
 import { revalidatePath } from "next/cache";
-import { auth } from "@clerk/nextjs/server";
 import {
-  getTopicsByUserQuery,
-  getTopicDetailQuery,
   createTopicMutation,
   updateTopicMutation,
   deleteTopicsMutation,
@@ -15,47 +10,31 @@ import {
   createTopicSchema,
   updateTopicSchema,
   deleteTopicsSchema,
-  type TopicProps,
 } from "./types";
 import { getTranslations } from "next-intl/server";
 import { topicRatelimit } from "~/server/ratelimit";
 import analyticsServerClient from "~/server/analytics";
+import { authedAction } from "~/lib/zsa-procedures";
 
-export async function getMyTopics() {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
-  return getTopicsByUserQuery(user.userId);
-}
-
-export async function getTopicDetail(id: TopicProps["id"]) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-
-  return getTopicDetailQuery({ id, userId: user.userId });
-}
-
-export const createTopic = createServerAction()
+export const createTopic = authedAction
+  .createServerAction()
   .input(async () => {
     const t = await getTranslations("topic.form");
     return createTopicSchema(t);
   })
-  .handler(async ({ input }) => {
-    const user = auth();
-    if (!user.userId) throw new Error("Not authenticated");
-
-    const { success } = await topicRatelimit.limit(user.userId);
+  .handler(async ({ input: newTopicData, ctx: { userId } }) => {
+    const { success } = await topicRatelimit.limit(userId);
     if (!success) {
       throw new Error("Topic creation rate limit reached. Try again later.");
     }
 
     const newTopic = await createTopicMutation({
-      userId: user.userId,
-      ...input,
+      ...newTopicData,
+      userId,
     });
 
     analyticsServerClient.capture({
-      distinctId: user.userId,
+      distinctId: userId,
       event: "topic created",
       properties: { newTopic },
     });
@@ -64,22 +43,20 @@ export const createTopic = createServerAction()
     return newTopic;
   });
 
-export const updateTopic = createServerAction()
+export const updateTopic = authedAction
+  .createServerAction()
   .input(async () => {
     const t = await getTranslations("topic.form");
     return updateTopicSchema(t);
   })
-  .handler(async ({ input }) => {
-    const user = auth();
-    if (!user.userId) throw new Error("Not authenticated");
-
+  .handler(async ({ input: topicData, ctx: { userId } }) => {
     const updatedTopic = await updateTopicMutation({
-      ...input,
-      userId: user.userId,
+      ...topicData,
+      userId,
     });
 
     analyticsServerClient.capture({
-      distinctId: user.userId,
+      distinctId: userId,
       event: "topic updated",
       properties: { updatedTopic },
     });
@@ -88,19 +65,17 @@ export const updateTopic = createServerAction()
     return updatedTopic;
   });
 
-export const deleteTopic = createServerAction()
+export const deleteTopic = authedAction
+  .createServerAction()
   .input(deleteTopicsSchema)
-  .handler(async ({ input }) => {
-    const user = auth();
-    if (!user.userId) throw new Error("Not authenticated");
-
+  .handler(async ({ input: topicIds, ctx: { userId } }) => {
     const deletedTopics = await deleteTopicsMutation({
-      userId: user.userId,
-      deleteIds: input,
+      userId,
+      topicIds,
     });
 
     analyticsServerClient.capture({
-      distinctId: user.userId,
+      distinctId: userId,
       event: "topics deleted",
       properties: { deletedTopics },
     });

@@ -30,7 +30,8 @@ export async function getTopicDetailQuery({
   userId,
 }: Pick<TopicProps, "id" | "userId">) {
   const topic = await db.query.topics.findFirst({
-    where: (model, { eq }) => eq(model.userId, userId) && eq(model.id, id),
+    where: (model, { and, eq }) =>
+      and(eq(model.userId, userId), eq(model.id, id)),
     with: {
       questions: {
         orderBy: (questionModel) => questionModel.createdAt,
@@ -38,16 +39,18 @@ export async function getTopicDetailQuery({
     },
   });
 
-  if (topic) {
-    const testable = topic.questions.some(
-      (question) => !question.markedAsLearned,
-    );
-    const learnedCount = topic.questions.filter(
-      (question) => question.markedAsLearned,
-    ).length;
-
-    return { ...topic, testable, learnedCount };
+  if (!topic) {
+    throw new Error("Topic not found");
   }
+
+  const testable = topic.questions.some(
+    (question) => !question.markedAsLearned,
+  );
+  const learnedCount = topic.questions.filter(
+    (question) => question.markedAsLearned,
+  ).length;
+
+  return { ...topic, testable, learnedCount };
 }
 
 export async function createTopicMutation(input: CreateTopicProps) {
@@ -71,11 +74,11 @@ export async function updateTopicMutation({
 
 export async function deleteTopicsMutation({
   userId,
-  deleteIds,
+  topicIds,
 }: DeleteTopicsProps) {
   const deletedTopics = await db
     .delete(topics)
-    .where(and(inArray(topics.id, deleteIds), eq(topics.userId, userId)))
+    .where(and(inArray(topics.id, topicIds), eq(topics.userId, userId)))
     .returning();
 
   return deletedTopics;

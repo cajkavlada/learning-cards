@@ -50,7 +50,7 @@ export const deleteQuestionsSchema = baseQuestionSchema
   .shape.id.array();
 export type DeleteQuestionsProps = {
   userId: TopicProps["userId"];
-  deleteIds: z.infer<typeof deleteQuestionsSchema>;
+  questionIds: z.infer<typeof deleteQuestionsSchema>;
 };
 
 export const updateQuestionLearnedStatusSchema = baseQuestionSchema

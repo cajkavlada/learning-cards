@@ -1,6 +1,6 @@
 import { FormHeader } from "~/components/form";
 import { TopicForm } from "~/features/topics/components/topicForm";
-import { getTopicDetail } from "~/features/topics/actions";
+import { getTopicDetail } from "~/features/topics/fetchers";
 import { getTranslations } from "next-intl/server";
 
 export default async function EditTopicPage({

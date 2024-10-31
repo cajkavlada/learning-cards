@@ -35,5 +35,5 @@ export type UpdateTopicProps = z.infer<ReturnType<typeof updateTopicSchema>> &
 export const deleteTopicsSchema = baseTopicSchema.required().shape.id.array();
 export type DeleteTopicsProps = {
   userId: TopicProps["userId"];
-  deleteIds: z.infer<typeof deleteTopicsSchema>;
+  topicIds: z.infer<typeof deleteTopicsSchema>;
 };

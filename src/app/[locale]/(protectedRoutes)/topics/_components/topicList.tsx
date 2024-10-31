@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { TopicCard } from "./topicCard";
 import { TopicsBatchToolbar } from "./topicsBatchToolbar";
-import { getMyTopics } from "~/features/topics/actions";
+import { getMyTopics } from "~/features/topics/fetchers";
 
 export async function TopicList() {
   const t = await getTranslations("topic.list");

@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui";
-import { getTopicDetail } from "~/features/topics/actions";
+import { getTopicDetail } from "~/features/topics/fetchers";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { PageHeader } from "~/components/layout/pageHeader";

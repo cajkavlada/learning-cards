@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { LinkDialog } from "~/components/layout/dialog/linkDialog";
-import { getTopicDetail } from "~/features/topics/actions";
+import { getTopicDetail } from "~/features/topics/fetchers";
 import { TopicForm } from "~/features/topics/components/topicForm";
 
 export default async function EditTopicDialogPage({

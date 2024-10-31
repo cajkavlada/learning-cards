@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import { getCurrentQuestionInfo } from "~/features/quiz/actions";
 import { QuestionAnswer } from "./_components/questionAnswer";
+import { getCurrentQuestionInfo } from "~/features/quiz/fetchers";
 
 export default async function TestPage() {
   const currentQuestionInfo = await getCurrentQuestionInfo();

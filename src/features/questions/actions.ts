@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import {
-  getQuestionDetailQuery,
   createQuestionMutation,
   updateQuestionMutation,
   deleteQuestionsMutation,
@@ -12,30 +11,12 @@ import {
   createQuestionSchema,
   updateQuestionSchema,
   deleteQuestionsSchema,
-  type QuestionProps,
   updateQuestionLearnedStatusSchema,
 } from "./types";
-import { auth } from "@clerk/nextjs/server";
 import { getTranslations } from "next-intl/server";
 import analyticsServerClient from "~/server/analytics";
 import { questionRatelimit } from "~/server/ratelimit";
 import { authedAction } from "~/lib/zsa-procedures";
-
-export async function getQuestionDetail(id: QuestionProps["id"]) {
-  const user = auth();
-  if (!user.userId) throw new Error("Not authenticated");
-  const question = await getQuestionDetailQuery(id);
-
-  if (!question) {
-    throw new Error("Question not found");
-  }
-
-  if (question.topic.userId !== user.userId) {
-    throw new Error("You do not have permission for this question");
-  }
-
-  return question;
-}
 
 export const createQuestion = authedAction
   .createServerAction()

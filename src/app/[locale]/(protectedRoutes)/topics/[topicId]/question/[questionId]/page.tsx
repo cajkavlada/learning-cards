@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { FormHeader } from "~/components/form";
-import { getQuestionDetail } from "~/features/questions/actions";
+import { getQuestionDetail } from "~/features/questions/fetchers";
 import { QuestionForm } from "~/features/questions/components/questionForm";
 
 export default async function QuestionDetailPage({

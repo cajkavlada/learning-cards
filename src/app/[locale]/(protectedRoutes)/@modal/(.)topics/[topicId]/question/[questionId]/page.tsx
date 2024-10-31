@@ -1,5 +1,5 @@
 import { QuestionForm } from "~/features/questions/components/questionForm";
-import { getQuestionDetail } from "~/features/questions/actions";
+import { getQuestionDetail } from "~/features/questions/fetchers";
 import { LinkDialog } from "~/components/layout/dialog/linkDialog";
 import { getTranslations } from "next-intl/server";
 

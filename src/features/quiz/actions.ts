@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import {
   addQuizTopicLinkMutation,
   createQuizSessionMutation,
@@ -15,7 +14,6 @@ import {
   updateQuestionMutation,
 } from "../questions/queries";
 import { baseTopicSchema, type TopicProps } from "../topics/types";
-import { createServerAction } from "zsa";
 import { revalidatePath } from "next/cache";
 import { shuffleArray } from "~/utils/shuffle";
 import { baseQuestionSchema } from "../questions/types";

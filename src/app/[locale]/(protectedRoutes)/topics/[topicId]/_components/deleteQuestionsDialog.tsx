@@ -1,8 +1,7 @@
 "use client";
 
-import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
-import { deleteQuestions } from "~/features/questions/actions";
+import { deleteQuestionsActions } from "~/features/questions/actions";
 import type { QuestionProps } from "~/features/questions/types";
 import { DialogLayout } from "~/components/layout/dialog/dialogLayout";
 import { useDialog } from "~/components/layout/dialog/useDialog";
@@ -10,6 +9,8 @@ import { Button } from "~/components/ui";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQuestionStore } from "../_hooks/useQuestionSelected";
+import { useAction } from "next-safe-action/hooks";
+import { toastError } from "~/lib/toast";
 
 export function DeleteQuestionsButton({ id }: { id?: QuestionProps["id"] }) {
   const { openDialog } = useDialog();
@@ -36,7 +37,16 @@ export function DeleteQuestionsButton({ id }: { id?: QuestionProps["id"] }) {
 export function DeleteQuestionsDialog({ id }: { id?: QuestionProps["id"] }) {
   const { closeDialog } = useDialog();
   const t = useTranslations("question.delete");
-  const { isPending, execute } = useServerAction(deleteQuestions);
+
+  function onSuccess() {
+    toast(t("success", { count: questionsToDelete.length }));
+    closeDialog();
+    clearSelection();
+  }
+  const { isPending, execute } = useAction(deleteQuestionsActions, {
+    onSuccess,
+    onError: toastError,
+  });
 
   const clearSelection = useQuestionStore((state) => state.clearSelection);
   const selectedQuestionsFromStore = useQuestionStore(
@@ -49,23 +59,10 @@ export function DeleteQuestionsDialog({ id }: { id?: QuestionProps["id"] }) {
       title={t("title", { count: questionsToDelete.length })}
       submitLabel={t("confirm")}
       submitLoading={isPending}
-      onSubmit={onSubmit}
+      onSubmit={() => execute(questionsToDelete)}
       submitVariant="destructive"
     >
       {t("description", { count: questionsToDelete.length })}
     </DialogLayout>
   );
-
-  async function onSubmit() {
-    const [data, error] = await execute(questionsToDelete);
-
-    if (data) {
-      toast(t("success", { count: questionsToDelete.length }));
-      closeDialog();
-      clearSelection();
-    }
-    if (error) {
-      toast(error.name, { description: error.message });
-    }
-  }
 }

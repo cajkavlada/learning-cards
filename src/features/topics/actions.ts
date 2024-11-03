@@ -12,72 +12,50 @@ import {
   deleteTopicsSchema,
 } from "./types";
 import { getTranslations } from "next-intl/server";
-import { topicRatelimit } from "~/server/ratelimit";
-import analyticsServerClient from "~/server/analytics";
-import { authedAction } from "~/lib/zsa-procedures";
+import {
+  analyticsAuthActionClient,
+  rateLimitAnalyticsAuthActionClient,
+} from "~/lib/safe-action";
 
-export const createTopic = authedAction
-  .createServerAction()
-  .input(async () => {
+export const createTopicAction = rateLimitAnalyticsAuthActionClient
+  .metadata({ eventName: "topic created", rateLimitType: "createTopic" })
+  .schema(async () => {
     const t = await getTranslations("topic.form");
     return createTopicSchema(t);
   })
-  .handler(async ({ input: newTopicData, ctx: { userId } }) => {
-    const { success } = await topicRatelimit.limit(userId);
-    if (!success) {
-      throw new Error("Topic creation rate limit reached. Try again later.");
-    }
-
+  .action(async ({ parsedInput: newTopicData, ctx: { userId } }) => {
     const newTopic = await createTopicMutation({
       ...newTopicData,
       userId,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "topic created",
-      properties: { newTopic },
     });
 
     revalidatePath("/topics");
     return newTopic;
   });
 
-export const updateTopic = authedAction
-  .createServerAction()
-  .input(async () => {
+export const updateTopicAction = analyticsAuthActionClient
+  .metadata({ eventName: "topic updated" })
+  .schema(async () => {
     const t = await getTranslations("topic.form");
     return updateTopicSchema(t);
   })
-  .handler(async ({ input: topicData, ctx: { userId } }) => {
+  .action(async ({ parsedInput: topicData, ctx: { userId } }) => {
     const updatedTopic = await updateTopicMutation({
       ...topicData,
       userId,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "topic updated",
-      properties: { updatedTopic },
     });
 
     revalidatePath("/topics/[topicId]", "page");
     return updatedTopic;
   });
 
-export const deleteTopic = authedAction
-  .createServerAction()
-  .input(deleteTopicsSchema)
-  .handler(async ({ input: topicIds, ctx: { userId } }) => {
+export const deleteTopicsAction = analyticsAuthActionClient
+  .metadata({ eventName: "topics deleted" })
+  .schema(deleteTopicsSchema)
+  .action(async ({ parsedInput: topicIds, ctx: { userId } }) => {
     const deletedTopics = await deleteTopicsMutation({
       userId,
       topicIds,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "topics deleted",
-      properties: { deletedTopics },
     });
 
     revalidatePath("/topics");

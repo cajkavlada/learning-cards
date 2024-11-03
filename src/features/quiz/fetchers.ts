@@ -1,6 +1,6 @@
 import { getQuizSessionQuery } from "./queries";
 import { getSimpleQuestionQuery } from "../questions/queries";
-import { authed } from "~/lib/zsa-procedures";
+import { authed } from "~/lib/safe-action";
 
 export async function getCurrentQuestionInfo() {
   const { userId } = authed();

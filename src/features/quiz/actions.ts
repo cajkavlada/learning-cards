@@ -18,16 +18,16 @@ import { revalidatePath } from "next/cache";
 import { shuffleArray } from "~/utils/shuffle";
 import { baseQuestionSchema } from "../questions/types";
 import { redirect } from "next/navigation";
-import analyticsServerClient from "~/server/analytics";
-import { authedAction } from "~/lib/zsa-procedures";
+import { analyticsAuthActionClient, authActionClient } from "~/lib/safe-action";
 
-export const checkQuizSessionConflict = authedAction
-  .createServerAction()
-  .input(baseTopicSchema.required().shape.id.array())
-  .handler(async ({ input: topicIds, ctx: { userId } }) => {
+export const checkQuizSessionConflictAction = authActionClient
+  .schema(baseTopicSchema.required().shape.id.array())
+  .action(async ({ parsedInput: topicIds, ctx: { userId } }) => {
     const quizSessionTopics = await getQuizSessionTopicsQuery(userId);
 
-    return !arrayItemsAreEqual(topicIds, quizSessionTopics);
+    const isConflict = !arrayItemsAreEqual(topicIds, quizSessionTopics);
+    if (!isConflict) redirect("/quiz");
+    return isConflict;
   });
 
 function arrayItemsAreEqual(arr1: string[], arr2: string[]) {
@@ -38,10 +38,10 @@ function arrayItemsAreEqual(arr1: string[], arr2: string[]) {
   return sortedArr1.every((value, index) => value === sortedArr2[index]);
 }
 
-export const startNewQuizSession = authedAction
-  .createServerAction()
-  .input(baseTopicSchema.required().shape.id.array())
-  .handler(async ({ input: topicIds, ctx: { userId } }) => {
+export const startNewQuizSessionAction = analyticsAuthActionClient
+  .metadata({ eventName: "new quiz session created" })
+  .schema(baseTopicSchema.required().shape.id.array())
+  .action(async ({ parsedInput: topicIds, ctx: { userId } }) => {
     await deleteQuizSessionMutation(userId);
 
     const shuffledQuestionIds = await getShuffledQuestionsIds(topicIds);
@@ -53,17 +53,13 @@ export const startNewQuizSession = authedAction
 
     await addQuizTopicLinkMutation({ userId, topicIds });
 
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "new quiz session created",
-    });
-
     redirect(`/quiz`);
   });
 
-export const restartQuizSession = authedAction
-  .createServerAction()
-  .handler(async ({ ctx: { userId } }) => {
+export const restartQuizSessionAction = analyticsAuthActionClient
+  .metadata({ eventName: "quiz session restarted" })
+  .action(async ({ ctx: { userId } }) => {
+    console.log("ahoj");
     const quizSession = await getQuizSessionQuery(userId);
     if (!quizSession) throw new Error("Quiz session not found");
 
@@ -78,12 +74,6 @@ export const restartQuizSession = authedAction
     });
 
     revalidatePath("/quiz");
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "quiz session restarted",
-    });
-
     return updatedQuizSession;
   });
 
@@ -94,9 +84,9 @@ async function getShuffledQuestionsIds(topicIds: TopicProps["id"][]) {
   return shuffleArray(quizQuestionIds);
 }
 
-export const nextQuestion = authedAction
-  .createServerAction()
-  .handler(async ({ ctx: { userId } }) => {
+export const nextQuestionAction = analyticsAuthActionClient
+  .metadata({ eventName: "moving to next question" })
+  .action(async ({ ctx: { userId } }) => {
     const quizSession = await getQuizSessionQuery(userId);
     if (!quizSession) throw new Error("Quiz session not found");
 
@@ -107,25 +97,19 @@ export const nextQuestion = authedAction
       currentQuestionIndex: nextQuestionIndex,
     });
 
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "moving to next question",
-      properties: {
-        questionIndex: updatedQuizSession?.currentQuestionIndex,
-        questionId:
-          updatedQuizSession?.questionsIds[
-            updatedQuizSession?.currentQuestionIndex
-          ],
-      },
-    });
-
     revalidatePath("/quiz/[quizId]", "page");
-    return null;
+    return {
+      questionIndex: updatedQuizSession?.currentQuestionIndex,
+      questionId:
+        updatedQuizSession?.questionsIds[
+          updatedQuizSession?.currentQuestionIndex
+        ],
+    };
   });
 
-export const previousQuestion = authedAction
-  .createServerAction()
-  .handler(async ({ ctx: { userId } }) => {
+export const previousQuestionAction = analyticsAuthActionClient
+  .metadata({ eventName: "moving to previous question" })
+  .action(async ({ ctx: { userId } }) => {
     const quizSession = await getQuizSessionQuery(userId);
     if (!quizSession) throw new Error("Quiz session not found");
 
@@ -136,26 +120,20 @@ export const previousQuestion = authedAction
       currentQuestionIndex: previousQuestionIndex,
     });
 
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "moving to previous question",
-      properties: {
-        questionIndex: updatedQuizSession?.currentQuestionIndex,
-        questionId:
-          updatedQuizSession?.questionsIds[
-            updatedQuizSession?.currentQuestionIndex
-          ],
-      },
-    });
-
     revalidatePath("/quiz/[quizId]", "page");
-    return null;
+    return {
+      questionIndex: updatedQuizSession?.currentQuestionIndex,
+      questionId:
+        updatedQuizSession?.questionsIds[
+          updatedQuizSession?.currentQuestionIndex
+        ],
+    };
   });
 
-export const switchLearned = authedAction
-  .createServerAction()
-  .input(baseQuestionSchema.required().shape.markedAsLearned)
-  .handler(async ({ input: learned, ctx: { userId } }) => {
+export const switchLearnedAction = analyticsAuthActionClient
+  .metadata({ eventName: "learned flag switched" })
+  .schema(baseQuestionSchema.required().shape.markedAsLearned)
+  .action(async ({ parsedInput: learned, ctx: { userId } }) => {
     const quizSession = await getQuizSessionQuery(userId);
     if (!quizSession) throw new Error("Quiz session not found");
 
@@ -168,12 +146,6 @@ export const switchLearned = authedAction
       id: currentQuestionId,
       userId,
       markedAsLearned: learned,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "quiz session restarted",
-      properties: { updatedQuestion },
     });
 
     revalidatePath("/quiz/[quizId]", "page");

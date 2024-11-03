@@ -1,23 +1,26 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useServerAction } from "zsa-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Form, FormInput, FormEditor, LoadingButton } from "~/components/form";
 import { Checkbox, Label } from "~/components/ui";
-import { createQuestion, updateQuestion } from "~/features/questions/actions";
+import {
+  createQuestionAction,
+  updateQuestionAction,
+} from "~/features/questions/actions";
 import {
   questionFormSchema,
   type QuestionProps,
   type QuestionFormProps,
 } from "~/features/questions/types";
 import type { TopicProps } from "~/features/topics/types";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { formatZsaError } from "~/utils/formatZSAError";
+import { useAction } from "next-safe-action/hooks";
+import { toastError } from "~/lib/toast";
 
 export function QuestionForm({ question }: { question?: QuestionProps }) {
   const router = useRouter();
@@ -26,10 +29,14 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
 
   const [createAnother, setCreateAnother] = useState(false);
 
-  const { isPending: createIsPending, execute: create } =
-    useServerAction(createQuestion);
-  const { isPending: updateIsPending, execute: update } =
-    useServerAction(updateQuestion);
+  const { isPending: createIsPending, executeAsync: createQuestion } =
+    useAction(createQuestionAction, {
+      onError: toastError,
+    });
+  const { isPending: updateIsPending, executeAsync: updateQuestion } =
+    useAction(updateQuestionAction, {
+      onError: toastError,
+    });
 
   const form = useForm<QuestionFormProps>({
     resolver: zodResolver(questionFormSchema(t)),
@@ -38,6 +45,34 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       answer: question?.answer ?? "",
     },
   });
+
+  async function onCreate(formData: QuestionFormProps) {
+    const res = await createQuestion({
+      ...formData,
+      topicId: topicId as TopicProps["id"],
+    });
+    if (res?.data) {
+      toast(t("create.success"));
+      if (createAnother) {
+        form.setFocus("question");
+        form.reset();
+      } else {
+        router.back();
+      }
+    }
+  }
+
+  async function onUpdate(formData: QuestionFormProps) {
+    if (!question) return;
+    const res = await updateQuestion({
+      ...formData,
+      id: question.id,
+    });
+    if (res?.data) {
+      toast(t("edit.success"));
+      router.back();
+    }
+  }
 
   return (
     <Form
@@ -80,39 +115,4 @@ export function QuestionForm({ question }: { question?: QuestionProps }) {
       </div>
     </Form>
   );
-
-  async function onCreate(formData: QuestionFormProps) {
-    if (!topicId) return;
-    const [data, error] = await create({
-      ...formData,
-      topicId: topicId as TopicProps["id"],
-    });
-    if (data) {
-      toast(t("create.success"));
-      if (createAnother) {
-        form.setFocus("question");
-        form.reset();
-      } else {
-        router.back();
-      }
-    }
-    if (error) {
-      toast(error.name, { description: formatZsaError(error) });
-    }
-  }
-
-  async function onUpdate(formData: QuestionFormProps) {
-    if (!question) return;
-    const [data, error] = await update({
-      ...formData,
-      id: question.id,
-    });
-    if (data) {
-      toast(t("edit.success"));
-      router.back();
-    }
-    if (error) {
-      toast(error.name, { description: error.message });
-    }
-  }
 }

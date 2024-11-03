@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useServerAction } from "zsa-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -12,18 +11,17 @@ import {
 } from "~/features/topics/types";
 
 import { Form, FormInput, LoadingButton } from "~/components/form";
-import { createTopic, updateTopic } from "~/features/topics/actions";
+import {
+  createTopicAction,
+  updateTopicAction,
+} from "~/features/topics/actions";
 import { useTranslations } from "next-intl";
-import { formatZsaError } from "~/utils/formatZSAError";
+import { useAction } from "next-safe-action/hooks";
+import { toastError } from "~/lib/toast";
 
 export function TopicForm({ topic }: { topic?: TopicProps }) {
   const router = useRouter();
   const t = useTranslations("topic.form");
-
-  const { isPending: createIsPending, execute: create } =
-    useServerAction(createTopic);
-  const { isPending: updateIsPending, execute: update } =
-    useServerAction(updateTopic);
 
   const form = useForm<TopicFormProps>({
     resolver: zodResolver(topicFormSchema(t)),
@@ -32,6 +30,34 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
       description: topic?.description ?? "",
     },
   });
+
+  const { isPending: createIsPending, execute: createTopic } = useAction(
+    createTopicAction,
+    {
+      onSuccess: () => handleSuccess(t("create.success")),
+      onError: toastError,
+    },
+  );
+  const { isPending: updateIsPending, execute: updateTopic } = useAction(
+    updateTopicAction,
+    {
+      onSuccess: () => handleSuccess(t("edit.success")),
+      onError: toastError,
+    },
+  );
+
+  function handleSuccess(message: string) {
+    toast(message);
+    router.back();
+  }
+
+  async function onSubmit(formData: TopicFormProps) {
+    if (topic) {
+      updateTopic({ ...formData, id: topic.id });
+    } else {
+      createTopic(formData);
+    }
+  }
 
   return (
     <Form
@@ -61,22 +87,4 @@ export function TopicForm({ topic }: { topic?: TopicProps }) {
       </div>
     </Form>
   );
-
-  async function onSubmit(formData: TopicFormProps) {
-    let data, error, toastMessage;
-    if (topic) {
-      [data, error] = await update({ ...formData, id: topic.id });
-      toastMessage = t("edit.success");
-    } else {
-      [data, error] = await create(formData);
-      toastMessage = t("create.success");
-    }
-    if (data) {
-      toast(toastMessage);
-      router.back();
-    }
-    if (error) {
-      toast(error.name, { description: formatZsaError(error) });
-    }
-  }
 }

@@ -15,9 +15,9 @@ import {
   useQuestionStore,
 } from "../_hooks/useQuestionSelected";
 import type { QuestionProps } from "~/features/questions/types";
-import { switchLearnedStatus } from "~/features/questions/actions";
-import { useServerAction } from "zsa-react";
-import { toast } from "sonner";
+import { switchLearnedStatusAction } from "~/features/questions/actions";
+import { useAction } from "next-safe-action/hooks";
+import { toastError } from "~/lib/toast";
 
 export function QuestionsBatchToolbar({
   questions,
@@ -27,7 +27,10 @@ export function QuestionsBatchToolbar({
   const t = useTranslations("question.list");
   const { openDialog } = useDialog();
   const { toggleSelectAll, isAllSelected } = useQuestionBatchSelect(questions);
-  const { execute: switchLearned } = useServerAction(switchLearnedStatus);
+  const { execute: switchLearned } = useAction(switchLearnedStatusAction, {
+    onSuccess: () => clearSelection(),
+    onError: toastError,
+  });
 
   const selectedQuestionsFromStore = useQuestionStore(
     (state) => state.selectedItems,
@@ -35,16 +38,10 @@ export function QuestionsBatchToolbar({
   const clearSelection = useQuestionStore((state) => state.clearSelection);
 
   async function handleToggleLearned(markAsLearned: boolean) {
-    const [data, error] = await switchLearned({
+    switchLearned({
       ids: Array.from(selectedQuestionsFromStore),
       markedAsLearned: markAsLearned,
     });
-    if (data) {
-      clearSelection();
-    }
-    if (error) {
-      toast(error.name, { description: error.message });
-    }
   }
 
   return (

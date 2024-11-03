@@ -1,4 +1,4 @@
-import { authed } from "~/lib/zsa-procedures";
+import { authed } from "~/lib/safe-action";
 import type { QuestionProps } from "./types";
 import { getQuestionDetailQuery } from "./queries";
 

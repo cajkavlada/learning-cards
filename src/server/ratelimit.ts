@@ -10,5 +10,7 @@ function createRateLimit(count: number, duration: Duration) {
   });
 }
 
-export const topicRatelimit = createRateLimit(2, "10 s");
-export const questionRatelimit = createRateLimit(3, "10 s");
+export const rateLimiters = {
+  createTopic: createRateLimit(2, "10 s"),
+  createQuestion: createRateLimit(3, "10 s"),
+};

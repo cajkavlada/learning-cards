@@ -14,91 +14,63 @@ import {
   updateQuestionLearnedStatusSchema,
 } from "./types";
 import { getTranslations } from "next-intl/server";
-import analyticsServerClient from "~/server/analytics";
-import { questionRatelimit } from "~/server/ratelimit";
-import { authedAction } from "~/lib/zsa-procedures";
+import {
+  analyticsAuthActionClient,
+  rateLimitAnalyticsAuthActionClient,
+} from "~/lib/safe-action";
 
-export const createQuestion = authedAction
-  .createServerAction()
-  .input(async () => {
+export const createQuestionAction = rateLimitAnalyticsAuthActionClient
+  .metadata({ eventName: "question created", rateLimitType: "createQuestion" })
+  .schema(async () => {
     const t = await getTranslations("question.form");
     return createQuestionSchema(t);
   })
-  .handler(async ({ input: newQuestionData, ctx: { userId } }) => {
-    const { success } = await questionRatelimit.limit(userId);
-    if (!success) {
-      throw new Error("Question creation rate limit reached. Try again later.");
-    }
-
+  .action(async ({ parsedInput: newQuestionData, ctx: { userId } }) => {
     const newQuestion = await createQuestionMutation({
       ...newQuestionData,
       userId,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "question created",
-      properties: { newQuestion },
     });
 
     revalidatePath("/topics/[topicId]", "page");
     return newQuestion;
   });
 
-export const updateQuestion = authedAction
-  .createServerAction()
-  .input(async () => {
+export const updateQuestionAction = analyticsAuthActionClient
+  .metadata({ eventName: "question updated" })
+  .schema(async () => {
     const t = await getTranslations("question.form");
     return updateQuestionSchema(t);
   })
-  .handler(async ({ input: questionData, ctx: { userId } }) => {
+  .action(async ({ parsedInput: questionData, ctx: { userId } }) => {
     const updatedQuestion = await updateQuestionMutation({
       ...questionData,
       userId,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "question updated",
-      properties: { updatedQuestion },
     });
 
     revalidatePath("/topics/[topicId]", "page");
     return updatedQuestion;
   });
 
-export const switchLearnedStatus = authedAction
-  .createServerAction()
-  .input(updateQuestionLearnedStatusSchema)
-  .handler(async ({ input: switchData, ctx: { userId } }) => {
+export const switchLearnedStatusAction = analyticsAuthActionClient
+  .metadata({ eventName: "questions learned status updated" })
+  .schema(updateQuestionLearnedStatusSchema)
+  .action(async ({ parsedInput: switchData, ctx: { userId } }) => {
     const updatedQuestions = await switchLearnedMutation({
       ...switchData,
       userId,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "questions learned status updated",
-      properties: { updatedQuestions },
     });
 
     revalidatePath("/topics/[topicId]", "page");
     return updatedQuestions;
   });
 
-export const deleteQuestions = authedAction
-  .createServerAction()
-  .input(deleteQuestionsSchema)
-  .handler(async ({ input: questionIds, ctx: { userId } }) => {
+export const deleteQuestionsActions = analyticsAuthActionClient
+  .metadata({ eventName: "questions deleted" })
+  .schema(deleteQuestionsSchema)
+  .action(async ({ parsedInput: questionIds, ctx: { userId } }) => {
     const deletedQuestions = await deleteQuestionsMutation({
       userId,
       questionIds,
-    });
-
-    analyticsServerClient.capture({
-      distinctId: userId,
-      event: "questions deleted",
-      properties: { deletedQuestions },
     });
 
     revalidatePath("/topics/[topicId]", "page");

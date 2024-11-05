@@ -5,7 +5,12 @@
   "navbar": {
     "home": "Home",
     "topics": "Topics",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "modeToggle": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
   },
   "home": {
     "title": "Learning cards",

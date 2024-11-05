@@ -5,7 +5,12 @@
   "navbar": {
     "home": "Domů",
     "topics": "Témata",
-    "signIn": "Přihlásit se"
+    "signIn": "Přihlásit se",
+    "modeToggle": {
+      "light": "Světlý režim",
+      "dark": "Tmavý režim",
+      "system": "Systémový režim"
+    }
   },
   "home": {
     "title": "Šprtací kartičky",
